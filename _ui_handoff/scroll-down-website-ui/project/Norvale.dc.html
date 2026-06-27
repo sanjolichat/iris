@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=sentient@400,500,700&amp;f[]=satoshi@400,500,700,900&amp;display=swap">
+<style>
+  html, body { margin:0; padding:0; background:#100f0b; }
+  * { box-sizing:border-box; }
+  @keyframes nv-twinkle { 0%,100%{opacity:.25;transform:scale(.8)} 50%{opacity:1;transform:scale(1.1)} }
+  @keyframes nv-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .nv-reveal { opacity:0; transform:translateY(36px); transition:opacity 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1); }
+  .nv-reveal.in { opacity:1; transform:none; }
+  @keyframes nv-orbit { to { transform: rotate(360deg); } }
+  @keyframes nv-bubble { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.18); } }
+  .nv-card { position:relative; box-shadow: 0 2px 5px rgba(0,0,0,.35), 0 14px 28px rgba(0,0,0,.45), 0 46px 84px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.20), inset 0 -28px 50px rgba(0,0,0,.30) !important; border:1px solid rgba(255,255,255,.08); }
+  .nv-card::after { content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:.13; mix-blend-mode:overlay; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  @keyframes nv-grainshift { 0%{transform:translate(0,0)} 25%{transform:translate(-4%,3%)} 50%{transform:translate(3%,-4%)} 75%{transform:translate(-3%,-2%)} 100%{transform:translate(2%,3%)} }
+  @keyframes nv-marquee { 0%{ transform:translateX(0); } 100%{ transform:translateX(-50%); } }
+</style>
+</helmet>
+<div id="nv-root" style="position:relative; width:100%; overflow:hidden; background:#100f0b;">
+<div id="nv-stage" style="position:absolute; top:0; left:0; width:1320px; transform-origin:top left; font-family:'Satoshi',sans-serif;">
+
+  <!-- top progress bar -->
+  <div style="position:fixed; top:0; left:0; height:3px; width:100%; background:transparent; z-index:60;">
+    <div id="nv-bar" style="height:100%; width:0%; background:linear-gradient(90deg,#7d9b6a,#e9d9b8);"></div>
+  </div>
+
+  <!-- ===================== SECTION 1 : NORVALE HERO ===================== -->
+  <section data-screen-label="Hero" style="position: relative; padding: 46px 40px 60px; background: linear-gradient(180deg, #264529 0%, #264529 78%, #28492c 100%)">
+    <!-- outer top nav -->
+    <div style="display:flex; align-items:center; justify-content:space-between; color:#efe9dc;">
+      
+      
+    </div>
+    
+
+    <!-- cream hero card -->
+    <div id="nv-herocard" style="position:relative; width:1240px; margin:0 auto; border-radius:22px; overflow:hidden; background:#ece7d8; box-shadow:0 50px 120px rgba(0,0,0,.55);">
+      <!-- inner header -->
+      <div style="position:relative; z-index:8; display:flex; align-items:center; justify-content:space-between; padding:24px 34px;">
+        <div style="font-size:20px; color:#1d1a12;">✦</div>
+        <div style="display:flex; flex-direction:column; gap:4px; width:24px;">
+          <span style="height:2px; background:#211e15;"></span><span style="height:2px; background:#211e15;"></span>
+        </div>
+      </div>
+
+      <!-- painting lower bg -->
+      <div id="nv-paint-wrap" style="position:absolute; left:0; right:0; bottom:0; height:74%; overflow:hidden;">
+        <div id="nv-paint" style="position:absolute; inset:-8% 0 0 0; background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Albert_Bierstadt_-_Among_the_Sierra_Nevada,_California_-_Google_Art_Project.jpg?width=1600'); background-size:cover; background-position:center 32%;"></div>
+        <div style="position: absolute; inset: 0; background: linear-gradient(180deg,#ece7d8 0%, rgba(236,231,216,.5) 11%, rgba(236,231,216,0) 26%); left: 5px; top: 7px"><div style="position: absolute; z-index: 9; left: 50%; transform: translateX(-50%); top: 356px; width: 414px; border-radius: 200px 200px 16px 16px; background: #100e09; color: #e8e3d6; padding: 70px 26px 16px; height: 728px" data-comment-anchor="8f6627a069-div">
+        <div style="display:flex; align-items:center; justify-content:space-between; font-size:11px; color:#8d877a;">
+          
+          
+        </div><div style="height:120px; border-radius:8px; background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Albert_Bierstadt_-_Looking_Down_Yosemite_Valley,_California_-_Google_Art_Project.jpg?width=900'); background-size:cover; background-position:40% 70%;"></div>
+        
+        
+        
+        
+      </div></div>
+      </div>
+
+      <!-- headline -->
+      <div style="position:relative; z-index:6; text-align:center; padding:26px 0 0;">
+        <div style="font-family:'Sentient',serif; font-weight:500; color:#16140c; line-height:.82;">
+          <div style="font-size: 150px; letter-spacing: .01em; color: #234128; font-weight: 400">IRIS</div>
+          
+        </div>
+        <span style="font-family: 'Sentient',serif; font-size: 24px; line-height: 1; color: #2f2a1d; font-weight: 400; letter-spacing: .16em; white-space: nowrap">Environmental Scanner</span><div style="margin:46px auto 0; max-width:430px; display:flex; align-items:flex-start; justify-content:center; gap:14px; color:#2a2619;">
+          
+        </div><div style="margin:10px auto 0; width:280px; display:flex; align-items:center; justify-content:space-between; background:#15130c; color:#efe9dc; border-radius:40px; padding:18px 26px; font-size:16px; cursor:pointer;">
+          <span>Scan Now</span><span style="font-size:20px;">+</span>
+        </div>
+        
+      </div>
+
+      <!-- progress floating card -->
+      <div style="position:absolute; z-index:9; top:96px; right:34px; width:330px; border-radius:18px; padding:22px 24px 16px; background:rgba(34,32,24,.42); backdrop-filter:blur(10px); color:#f0ebdd; box-shadow:0 20px 50px rgba(0,0,0,.25);">
+        
+        
+      </div>
+      <!-- three dots -->
+      <div style="position:absolute; z-index:9; top:330px; right:40px; display:flex; gap:12px;">
+        
+        
+        
+      </div>
+
+      <!-- left small framed pine image -->
+      <div style="position:absolute; z-index:9; left:30px; top:210px; width:200px; height:215px; border-radius:18px; background:rgba(245,245,240,.14); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.35); box-shadow:0 18px 40px rgba(0,0,0,.22), inset 0 1px 3px rgba(255,255,255,.55);"></div>
+
+      <!-- empty glass lens boxes -->
+      <div style="position:absolute; z-index:9; right:34px; top:560px; width:230px; height:150px; border-radius:18px; background:rgba(245,245,240,.14); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.35); box-shadow:0 18px 40px rgba(0,0,0,.24), inset 0 1px 3px rgba(255,255,255,.55);"></div>
+      <div style="position:absolute; z-index:9; right:38px; top:300px; width:200px; height:130px; border-radius:18px; background:rgba(245,245,240,.13); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.32); box-shadow:0 18px 40px rgba(0,0,0,.22), inset 0 1px 3px rgba(255,255,255,.5);"></div>
+      <div style="position:absolute; z-index:9; left:40px; top:470px; width:175px; height:140px; border-radius:18px; background:rgba(245,245,240,.13); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.32); box-shadow:0 18px 40px rgba(0,0,0,.22), inset 0 1px 3px rgba(255,255,255,.5);"></div>
+
+      <!-- 01 dark journal card -->
+      
+
+      <div style="position:absolute; left:0; right:0; bottom:0; height:170px; background:linear-gradient(180deg, rgba(38,69,41,0), #264529); z-index:7; pointer-events:none;"></div>
+      <!-- spacer to give card height -->
+      <div style="height:1080px;"></div>
+    </div>
+
+    <!-- typography card removed per request -->
+
+    <!-- bottom-right quote -->
+    <div style="position:absolute; right:46px; bottom:42px; z-index:12; max-width:430px; display:flex; gap:14px; color:#d8d2c4;">
+      <span style="font-family:'Sentient',serif; font-size:40px; color:#6f6a5c; line-height:.6;">“</span>
+      
+      <span style="font-family:'Sentient',serif; font-size:40px; color:#6f6a5c; line-height:1.2; align-self:flex-end;">”</span>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION 2 : GREEN DASHBOARD ===================== -->
+  <section data-screen-label="Showcase" style="position:relative; background:radial-gradient(120% 80% at 50% 0%, #28492c 0%, #1c3622 55%, #14271a 100%); padding:120px 60px 130px;">
+    <!-- dark journal textbox continued from hero, cut off by a forest silhouette, fading into the green -->
+    <div style="position:relative; z-index:3; width:414px; margin:-185px auto 80px; height:300px; background:linear-gradient(180deg,#100e09 0%, #100e09 32%, #11201a 70%, rgba(20,39,26,0) 100%); -webkit-mask-image:url(&quot;data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27414%27 height=%27240%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0 0 H414 V150 L393 210 L372 158 L351 204 L330 152 L309 216 L288 160 L267 200 L246 150 L225 214 L204 156 L183 204 L162 152 L141 212 L120 158 L99 206 L78 150 L57 210 L36 160 L15 200 L0 152 Z%27 fill=%27%23000%27/%3E%3C/svg%3E&quot;); mask-image:url(&quot;data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27414%27 height=%27240%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0 0 H414 V150 L393 210 L372 158 L351 204 L330 152 L309 216 L288 160 L267 200 L246 150 L225 214 L204 156 L183 204 L162 152 L141 212 L120 158 L99 206 L78 150 L57 210 L36 160 L15 200 L0 152 Z%27 fill=%27%23000%27/%3E%3C/svg%3E&quot;); -webkit-mask-size:100% 100%; mask-size:100% 100%; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;">
+      
+    </div>
+    <div class="nv-reveal" style="text-align:center; margin-bottom:64px;">
+      <div style="font-size:13px; letter-spacing:.4em; color:#8fb27e; text-transform:uppercase;">Product Showcase</div>
+      <h2 style="font-family:'Sentient',serif; font-weight:500; color:#f0ead9; font-size:66px; margin:14px 0 0; line-height:1;">Grown with intention.</h2>
+      <p style="color:#a9c19a; max-width:520px; margin:18px auto 0; font-size:16px; line-height:1.6;">A complete interface system for organic produce — dashboards, listings, and analytics in one quiet green language.</p>
+    </div>
+
+    <div style="max-width:1140px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:26px; align-items:start;">
+      <!-- left column -->
+      <div style="display:flex; flex-direction:column; gap:26px;">
+        <!-- big hero card -->
+        <div class="nv-reveal nv-card" style="border-radius:22px; background:linear-gradient(160deg,#21442a,#193320); padding:30px; box-shadow:0 26px 60px rgba(0,0,0,.4); position:relative; overflow:hidden; min-height:230px;" data-comment-anchor="a5c9d4eade-div">
+          <div style="position:absolute; right:-10px; top:10px; width:240px; height:200px; background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Ambersweet_oranges.jpg?width=600'); background-size:cover; background-position:center; border-radius:16px; box-shadow:0 18px 40px rgba(0,0,0,.45); filter:saturate(1.05);"></div>
+          <span style="font-size:11px; letter-spacing:.1em; color:#bcd4ad; background:rgba(255,255,255,.08); padding:6px 12px; border-radius:20px;">Featured</span>
+          <h3 style="font-family:'Sentient',serif; color:#f3edde; font-size:30px; font-weight:500; margin:60px 0 10px; max-width:240px; line-height:1.1;">Citrus harvest, freshly mapped</h3>
+          <p style="color:#9fba90; font-size:13px; max-width:230px; line-height:1.5; margin:0 0 22px;">Track ripeness, yield and origin across every grove in a single calm dashboard.</p>
+          <button style="border:none; background:#E4EC81; color:#22331c; font-weight:700; font-family:'Satoshi'; padding:13px 22px; border-radius:30px; font-size:14px; cursor:pointer;">Open dashboard</button>
+        </div>
+        <!-- profile card -->
+        <div class="nv-reveal nv-card" style="border-radius:22px; background:#1c3622; padding:26px; box-shadow:0 26px 60px rgba(0,0,0,.4);">
+          <div style="display:flex; align-items:center; gap:12px;" data-comment-anchor="2d3b107268-div">
+            <div style="width:42px;height:42px;border-radius:50%;background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Ambersweet_oranges.jpg?width=200');background-size:cover;"></div>
+            <div><div style="color:#eee6d6; font-weight:600; font-size:16px;">Maira Estes</div><div style="color:#8fb27e; font-size:12px;">Grove operations lead</div></div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px;">
+            <div style="background:#16291c; border-radius:12px; padding:14px;"><div style="color:#9fba90; font-size:11px;">Active groves</div><div style="color:#f0ead9; font-family:'Sentient',serif; font-size:26px;">12</div></div>
+            <div style="background:#16291c; border-radius:12px; padding:14px;"><div style="color:#9fba90; font-size:11px;">Avg. yield</div><div style="color:#f0ead9; font-family:'Sentient',serif; font-size:26px;">94%</div></div>
+          </div>
+          <button style="margin-top:18px; width:100%; border:1px solid rgba(255,255,255,.14); background:transparent; color:#cfe0c2; padding:12px; border-radius:12px; font-family:'Satoshi'; font-size:13px; cursor:pointer;">View full profile</button>
+        </div>
+        <!-- big organics analytics -->
+        <div class="nv-reveal nv-card" style="border-radius:22px; background:#1c3622; padding:26px; box-shadow:0 26px 60px rgba(0,0,0,.4); position:relative; min-height:170px; overflow:hidden;">
+          <h3 style="font-family:'Sentient',serif; color:#f0ead9; font-size:22px; font-weight:500; margin:0 0 6px; max-width:230px;">Be organic. Healthier crops, naturally.</h3>
+          <p style="color:#8fb27e; font-size:12px;">1. Traceability</p>
+          <div style="position:absolute; right:24px; top:24px; width:150px; height:150px; border-radius:50%; border:1px dashed rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center;">
+            <div style="width:78px;height:78px;border-radius:50%;background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Ambersweet_oranges.jpg?width=300');background-size:cover;background-position:center;box-shadow:0 10px 24px rgba(0,0,0,.4);"></div>
+          </div>
+          <span style="position:absolute; left:26px; bottom:22px; width:46px; height:14px; border-radius:6px; background:#FAFCFD;"></span>
+        </div>
+        <!-- search/filter bar card -->
+        <div class="nv-reveal nv-card" style="border-radius:22px; background:#1c3622; padding:22px 24px; box-shadow:0 26px 60px rgba(0,0,0,.4);">
+          <div style="color:#cfe0c2; font-weight:600; font-size:15px; margin-bottom:14px;">Organics</div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <span style="background:#16291c; color:#9fba90; padding:9px 14px; border-radius:20px; font-size:12px;">All produce</span>
+            <span style="background:#16291c; color:#9fba90; padding:9px 14px; border-radius:20px; font-size:12px;">Citrus</span>
+            <span style="background:#16291c; color:#9fba90; padding:9px 14px; border-radius:20px; font-size:12px;">Leafy</span>
+            <span style="background:#16291c; color:#9fba90; padding:9px 14px; border-radius:20px; font-size:12px;">Berries</span>
+            <span style="margin-left:auto; background:#E4EC81; color:#22331c; padding:9px 14px; border-radius:20px; font-size:12px; font-weight:700;">Search</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- right column -->
+      <div style="display:flex; flex-direction:column; gap:26px;">
+        <!-- leafy hero -->
+        <div class="nv-reveal nv-card" style="border-radius:22px; background:linear-gradient(160deg,#1f3f27,#16291c); padding:0; box-shadow:0 26px 60px rgba(0,0,0,.4); overflow:hidden;">
+          <div style="height:200px; background-image:url('https://images.unsplash.com/photo-1756155160750-42354f02c1b7?auto=format&amp;fit=crop&amp;w=900&amp;q=80'); background-size:cover; background-position:center;"></div>
+          <div style="padding:24px 26px 28px;">
+            <h3 style="font-family:'Sentient',serif; color:#f0ead9; font-size:24px; font-weight:500; margin:0 0 8px;">Crop pages with harvest tags</h3>
+            <p style="color:#9fba90; font-size:13px; line-height:1.5; margin:0 0 18px;">Every listing carries its own story — soil, season, and the hands that grew it.</p>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="width:26px;height:26px;border-radius:50%;background:#FAFCFD;"></span><span style="color:#cfe0c2; font-size:13px;">Read the field notes</span><span style="margin-left:auto;color:#cfe0c2;">→</span></div>
+          </div>
+        </div>
+        <!-- mini order card -->
+        
+        <!-- support chat -->
+        <div class="nv-reveal nv-card" style="border-radius:22px; background:#1c3622; padding:22px 24px; box-shadow:0 26px 60px rgba(0,0,0,.4);">
+          <div style="color:#8fb27e; font-size:12px; margin-bottom:12px;">Fresh order</div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="flex:1;"><div style="color:#eee6d6; font-weight:600; font-size:15px;">Mixed citrus box</div><div style="color:#8fb27e; font-size:12px;">3 items • next-day</div></div>
+            <div style="display:flex; gap:6px;">
+              <span style="width:36px;height:36px;border-radius:9px;background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Ambersweet_oranges.jpg?width=160');background-size:cover;"></span>
+              <span style="width:36px;height:36px;border-radius:9px;background:#16291c;"></span>
+              <span style="width:36px;height:36px;border-radius:9px;background:#E4EC81;"></span>
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; margin-top:16px;"></div>
+        </div><div class="nv-reveal nv-card" style="border-radius:22px; background:#1c3622; padding:22px 24px; box-shadow:0 26px 60px rgba(0,0,0,.4); display:flex; gap:14px;">
+          <div style="width:40px;height:40px;border-radius:10px;background:#16291c;display:flex;align-items:center;justify-content:center;color:#8fb27e;">⌘</div>
+          <div style="flex:1;">
+            <div style="background:#16291c; border-radius:10px; padding:10px 12px; color:#cfe0c2; font-size:12px; margin-bottom:8px;">Need a fresh recipe pairing?</div>
+            <div style="display:flex; gap:8px; align-items:center;"><div style="width:40px;height:40px;border-radius:8px;background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Ambersweet_oranges.jpg?width=160');background-size:cover;"></div></div>
+          </div>
+        </div>
+        <!-- bar chart -->
+        
+        <!-- pomegranate cta -->
+        <div class="nv-reveal nv-card" style="border-radius:22px; background:linear-gradient(160deg,#21442a,#16291c); padding:28px; box-shadow:0 26px 60px rgba(0,0,0,.4); text-align:center;">
+          <div style="width:96px;height:96px;border-radius:50%;margin:0 auto 16px;background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Ambersweet_oranges.jpg?width=300');background-size:cover;background-position:center;box-shadow:0 14px 30px rgba(0,0,0,.4);"></div>
+          <h3 style="font-family:'Sentient',serif; color:#f0ead9; font-size:24px; font-weight:500; margin:0 0 16px;">Join the grower's circle</h3>
+          <button style="border:none; background:#E4EC81; color:#22331c; font-weight:700; font-family:'Satoshi'; padding:13px 30px; border-radius:30px; font-size:14px; cursor:pointer;">Get started</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION 3 : ECO SOLUTION ===================== -->
+  <section data-screen-label="Sustainability" style="position:relative; background:#eceef2;">
+    <!-- moss ring hero -->
+    <div style="position:relative; height:680px; overflow:hidden;">
+      <div id="nv-ring" style="position:absolute; left:50%; top:60px; transform:translateX(-50%); width:660px; height:660px; border-radius:50%; background-image:url('https://images.unsplash.com/photo-1756155160750-42354f02c1b7?auto=format&amp;fit=crop&amp;w=1100&amp;q=80'); background-size:cover; background-position:center; -webkit-mask:radial-gradient(circle, transparent 0 40%, #000 41% 50%, transparent 51%); mask:radial-gradient(circle, transparent 0 40%, #000 41% 50%, transparent 51%); filter:saturate(1.1) brightness(.95);"><div class="nv-reveal nv-pill" style="position: absolute; left: 280px; top: 38px; transform: translateX(-50%); background: rgba(255,255,255,.82); backdrop-filter: blur(6px); padding: 11px 20px; border-radius: 30px; font-size: 14px; color: #33402c; box-shadow: 0 10px 24px rgba(0,0,0,.12)">Green infrastructure</div></div>
+      <!-- bubbly arrows orbiting the ring (auto-animated) -->
+      <div style="position:absolute; left:50%; top:390px; width:660px; height:660px; transform:translate(-50%,-50%); pointer-events:none; z-index:4;">
+        <div style="position:absolute; inset:0; animation:nv-orbit 34s linear infinite;">
+          <div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) rotate(0deg) translateY(-300px);">
+            <div style="width:62px; height:62px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #8fc06a, #3f7a3a); box-shadow:0 12px 26px rgba(47,90,44,.4), inset 0 2px 6px rgba(255,255,255,.45); display:flex; align-items:center; justify-content:center; animation:nv-bubble 2.6s ease-in-out infinite;">
+              <svg width="30" height="30" viewBox="0 0 100 100" style="color:#fff;"><path d="M22 30 A34 34 0 0 1 78 40" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round"></path><path d="M80 20 L96 44 L66 47 Z" fill="currentColor"></path></svg>
+            </div>
+          </div>
+          <div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) rotate(120deg) translateY(-300px);">
+            <div style="width:62px; height:62px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #8fc06a, #3f7a3a); box-shadow:0 12px 26px rgba(47,90,44,.4), inset 0 2px 6px rgba(255,255,255,.45); display:flex; align-items:center; justify-content:center; animation:nv-bubble 2.6s ease-in-out infinite .8s;">
+              <svg width="30" height="30" viewBox="0 0 100 100" style="color:#fff;"><path d="M22 30 A34 34 0 0 1 78 40" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round"></path><path d="M80 20 L96 44 L66 47 Z" fill="currentColor"></path></svg>
+            </div>
+          </div>
+          <div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) rotate(240deg) translateY(-300px);">
+            <div style="width:62px; height:62px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #8fc06a, #3f7a3a); box-shadow:0 12px 26px rgba(47,90,44,.4), inset 0 2px 6px rgba(255,255,255,.45); display:flex; align-items:center; justify-content:center; animation:nv-bubble 2.6s ease-in-out infinite 1.6s;">
+              <svg width="30" height="30" viewBox="0 0 100 100" style="color:#fff;"><path d="M22 30 A34 34 0 0 1 78 40" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round"></path><path d="M80 20 L96 44 L66 47 Z" fill="currentColor"></path></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- center knockout word, auto-cycles Reduce / Reuse / Recycle -->
+      <div id="nv-recycle" style="position:absolute; left:50%; top:390px; transform:translate(-50%,-50%); text-align:center; user-select:none; pointer-events:none; z-index:4;">
+        <div id="nv-recycle-label" style="font-family:'Sentient',serif; font-weight:700; font-size:80px; line-height:1; letter-spacing:.01em; background-image:url('https://images.unsplash.com/photo-1756155160750-42354f02c1b7?auto=format&amp;fit=crop&amp;w=1100&amp;q=80'); background-size:560px 560px; background-position:center; -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; transition:opacity .45s ease, transform .45s cubic-bezier(.34,1.56,.64,1);">Reduce</div>
+      </div>
+      <!-- floating pills removed -->
+      
+    </div>
+
+    <!-- forest band (sweeps up over the ring hero for a cool transition) -->
+    <div style="position:relative; min-height:820px; overflow:hidden; margin-top:-110px; border-radius:42% 42% 0 0 / 10% 10% 0 0; z-index:2;">
+      <div id="nv-forest" style="position:absolute; inset:-10% 0; background-image:linear-gradient(180deg, rgba(20,40,24,.25), rgba(15,30,18,.55)), url('https://images.unsplash.com/photo-1756155160750-42354f02c1b7?auto=format&amp;fit=crop&amp;w=1600&amp;q=80'); background-size:cover; background-position:center;"></div>
+      <!-- floating navbar removed -->
+      <!-- sustainability heading -->
+      <div class="nv-reveal" style="position:relative; z-index:5; text-align:center; color:#f3f6ee; margin-top:120px; padding-top:54px;">
+        <div style="position:absolute; top:0; left:50%; transform:translateX(-50%); width:560px; max-width:80%; height:1px; background:linear-gradient(90deg, rgba(243,246,238,0), rgba(243,246,238,.7), rgba(243,246,238,0));"></div>
+        <h2 style="font-family:'Sentient',serif; font-weight:400; font-size:58px; margin:0;">Sustainability</h2>
+        <p style="max-width:680px; margin:22px auto 0; font-size:16px; line-height:1.7; color:#dfe7d6;">Our sustainability goals are designed to balance economic growth, environmental protection, and social development. These goals align with the principles of circular economy, resource efficiency, and sustainable development.</p>
+      </div>
+      <!-- revolving eco-terms marquee pinned to the forest bottom -->
+      <div style="position:absolute; left:0; right:0; bottom:0; z-index:6; padding:22px 0; overflow:hidden; white-space:nowrap; background:linear-gradient(180deg, rgba(10,20,12,0), rgba(8,16,10,.6)); -webkit-mask-image:linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image:linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);">
+        <div style="display:inline-block; white-space:nowrap; animation:nv-marquee 30s linear infinite; font-family:Satoshi,sans-serif; font-weight:700; font-size:18px; letter-spacing:.2em; color:#eef3e8;">
+          <span>MICROPLASTICS&nbsp;·&nbsp;WASTEWATER&nbsp;·&nbsp;SOURCING&nbsp;·&nbsp;RECYCLABILITY&nbsp;·&nbsp;CARBON&nbsp;·&nbsp;MICROFIBER&nbsp;·&nbsp;POLYMER&nbsp;LOAD&nbsp;·&nbsp;COMPLIANCE&nbsp;·&nbsp;</span><span>MICROPLASTICS&nbsp;·&nbsp;WASTEWATER&nbsp;·&nbsp;SOURCING&nbsp;·&nbsp;RECYCLABILITY&nbsp;·&nbsp;CARBON&nbsp;·&nbsp;MICROFIBER&nbsp;·&nbsp;POLYMER&nbsp;LOAD&nbsp;·&nbsp;COMPLIANCE&nbsp;·&nbsp;</span>
+        </div>
+      </div>
+    </div>
+    <!-- footer -->
+    <div style="background:#f6f4ec; padding:30px 0 50px; text-align:center; color:#6a7a60; font-size:13px;">ECO SOLUTION — Balancing growth and nature, quietly. © 2026</div>
+  </section>
+
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;grain&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:45,&quot;min&quot;:0,&quot;max&quot;:45,&quot;step&quot;:1,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Texture&quot;}}">
+class Component extends DCLogic {
+  componentDidUpdate() { if (this._applyGrain) this._applyGrain(); }
+  componentDidMount() {
+    const grainEl = document.getElementById('nv-grain');
+    this._applyGrain = () => { if (grainEl) grainEl.style.opacity = String((this.props.grain != null ? this.props.grain : 14) / 100); };
+    this._applyGrain();
+    const root = document.getElementById('nv-root');
+    const stage = document.getElementById('nv-stage');
+    const DESIGN_W = 1320;
+
+    const fit = () => {
+      const w = root.clientWidth || window.innerWidth;
+      const s = w / DESIGN_W;
+      stage.style.transform = 'scale(' + s + ')';
+      root.style.height = (stage.scrollHeight * s) + 'px';
+    };
+
+    // reveals (scroll-driven; IntersectionObserver is unreliable in this host)
+    const reveals = Array.prototype.slice.call(stage.querySelectorAll('.nv-reveal'));
+    reveals.forEach((el, i) => { el.style.transitionDelay = ((i % 6) * 70) + 'ms'; });
+    const checkReveals = () => {
+      const vh = window.innerHeight;
+      reveals.forEach(el => {
+        if (el.classList.contains('in')) return;
+        const r = el.getBoundingClientRect();
+        if (r.top < vh * 0.85 && r.bottom > 0) el.classList.add('in');
+      });
+    };
+    // safety: never leave content stuck invisible
+    setTimeout(() => reveals.forEach(el => el.classList.add('in')), 2500);
+
+    // counter (triggered from scroll handler)
+    let counted = false;
+    const pct = document.getElementById('nv-pct');
+    const heroCard = document.getElementById('nv-herocard');
+    const checkCount = () => {
+      if (counted || !heroCard || !pct) return;
+      const r = heroCard.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.6) {
+        counted = true;
+        let n = 0;
+        const t = setInterval(() => { n++; pct.textContent = n; if (n >= 20) clearInterval(t); }, 45);
+      }
+    };
+
+    // center word auto-cycles Reduce -> Reuse -> Recycle (no click needed)
+    const rlabel = document.getElementById('nv-recycle-label');
+    if (rlabel) {
+      const names = ['Reduce', 'Reuse', 'Recycle'];
+      let si = 0;
+      setInterval(() => {
+        si = (si + 1) % 3;
+        rlabel.style.opacity = '0';
+        rlabel.style.transform = 'scale(.78)';
+        setTimeout(() => {
+          rlabel.textContent = names[si];
+          rlabel.style.opacity = '1';
+          rlabel.style.transform = 'scale(1)';
+        }, 280);
+      }, 2200);
+    }
+
+    const paint = document.getElementById('nv-paint');
+    const showcaseCards = Array.prototype.slice.call(stage.querySelectorAll('section[data-screen-label="Showcase"] .nv-card'));
+    const forest = document.getElementById('nv-forest');
+    const ring = document.getElementById('nv-ring');
+    const bar = document.getElementById('nv-bar');
+
+    const onScroll = () => {
+      const y = window.scrollY || window.pageYOffset;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      if (bar) bar.style.width = Math.min(100, (y / Math.max(1, max)) * 100) + '%';
+      checkReveals();
+      checkCount();
+
+      // hero painting parallax
+      if (paint) {
+        const r = paint.getBoundingClientRect();
+        const p = r.top / window.innerHeight; // ~1 at start
+        paint.style.transform = 'translateY(' + (-p * 60) + 'px) scale(1.06)';
+      }
+      // ring rotate + drift
+      if (ring) {
+        const r = ring.getBoundingClientRect();
+        const prog = 1 - (r.top + r.height / 2) / window.innerHeight;
+        ring.style.transform = 'translateX(-50%) rotate(' + (prog * 14) + 'deg) scale(' + (0.92 + Math.min(0.12, Math.max(0, prog) * 0.12)) + ')';
+      }
+      // forest parallax
+      if (forest) {
+        const r = forest.parentElement.getBoundingClientRect();
+        const p = (window.innerHeight - r.top) / (window.innerHeight + r.height);
+        forest.style.transform = 'translateY(' + ((p - 0.5) * 90) + 'px)';
+      }
+      // vertical carousel: cards curve inward over a cylinder as they scroll
+      if (showcaseCards.length) {
+        const vc = window.innerHeight / 2;
+        for (let i = 0; i < showcaseCards.length; i++) {
+          const card = showcaseCards[i];
+          const r = card.getBoundingClientRect();
+          if (r.bottom < -200 || r.top > window.innerHeight + 200) continue;
+          let d = (r.top + r.height / 2 - vc) / window.innerHeight;
+          if (d < -1.1) d = -1.1; else if (d > 1.1) d = 1.1;
+          const rot = d * 34;
+          const tz = -Math.abs(d) * 180;
+          const sc = 1 - Math.abs(d) * 0.12;
+          card.style.transform = 'perspective(1100px) rotateX(' + rot + 'deg) translateZ(' + tz + 'px) scale(' + sc + ')';
+          card.style.transformOrigin = '50% 50%';
+        }
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true, capture: true });
+    document.addEventListener('scroll', onScroll, { passive: true, capture: true });
+    window.addEventListener('resize', fit);
+    // rAF ticker: robust against unknown scroll container in host
+    const tick = () => { onScroll(); requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+    // wait a tick for fonts/layout
+    fit();
+    setTimeout(fit, 300);
+    setTimeout(fit, 1200);
+    onScroll();
+  }
+}
+</script>
+</body>
+</html>

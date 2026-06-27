@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m py_compile iris.py)",
+      "Bash(python3 -c ' *)",
+      "Bash(unzip -q \"Scroll Down Website UI-handoff.zip\" -d _ui_handoff)",
+      "Skill(run)",
+      "Bash(pip3 show *)",
+      "Bash(python3 iris.py)",
+      "Bash(echo \"PID: $!\")"
+    ]
+  }
+}
