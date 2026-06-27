@@ -50,5 +50,3 @@ bash run.sh
 ## The vision
 
 The city of tomorrow needs citizens who can make informed environmental choices instantly — not after reading labels, not after Googling. Iris is the environmental intelligence layer: look at something, know its impact. Today it's on your laptop. Next it's in your glasses.
-
-Built by Sanjoli Chattopadhyay · FutureHacks 8
