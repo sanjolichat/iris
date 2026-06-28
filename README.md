@@ -7,7 +7,7 @@ Iris uses real webcam eye tracking to scan everyday products for their environme
 
 ## What it does
 
-1. **Calibrate** — follow dots on screen with your eyes (takes ~30 seconds)
+1. **Calibrate** — follow dots on screen with your eyes (takes ~45 seconds)
 2. **Look** at any product on screen — a green reticle follows your gaze
 3. **Dwell** for 1 second — Iris locks on and scans
 4. **See** the environmental HUD: microplastic risk, recyclability, impact score, threat level
