@@ -40,32 +40,24 @@ PANEL_BG    = (6, 20, 10)
 
 # ── Product zones (x1, y1, x2, y2, label) ──────────────────────────────────────
 PRODUCT_ZONES = [
-    # Shelf 1 — clothing
-    ( 80,  20, 210, 180, "H&M Polyester Jacket"),
-    (240,  20, 370, 180, "ZARA Nylon Sweater"),
-    (400,  20, 530, 180, "GAP Cotton T-Shirt"),
-    (560,  20, 690, 180, "Nike Fleece Hoodie"),
-    (720,  20, 850, 180, "H&M Acrylic Scarf"),
-    (880,  20,1010, 180, "Lulu Spandex Leggings"),
-    (1040, 20,1170, 180, "Levis Denim Jeans"),
-    # Shelf 2 — grocery/plastic
-    ( 80, 220, 180, 380, "Evian Plastic Bottle"),
-    (210, 240, 310, 380, "Tide Detergent Pod"),
-    (340, 230, 450, 380, "Heinz Ketchup Bottle"),
-    (480, 250, 580, 380, "Glad Plastic Wrap"),
-    (610, 225, 730, 380, "Pantene Shampoo Bottle"),
-    (760, 240, 860, 380, "Kellogg Cereal Box"),
-    (890, 230, 1000,380, "Chobani Yogurt Container"),
-    (1030,235,1130, 380, "Lays Chips Bag"),
+    # Shelf 2 — grocery/plastic (matched to scanner.html product-zone positions)
+    (  80, 220,  179, 380, "Evian Plastic Bottle"),
+    ( 210, 239,  310, 379, "Tide Detergent Pod"),
+    ( 339, 229,  449, 379, "Heinz Ketchup Bottle"),
+    ( 480, 249,  579, 380, "Glad Plastic Wrap"),
+    ( 610, 225,  730, 380, "Pantene Shampoo Bottle"),
+    ( 760, 239,  860, 379, "Kellogg Cereal Box"),
+    ( 889, 229,  999, 379, "Chobani Yogurt Container"),
+    (1030, 235, 1129, 380, "Lays Chips Bag"),
     # Shelf 3 — electronics/misc
-    ( 80, 430, 200, 560, "OtterBox Phone Case"),
-    (230, 440, 340, 560, "Anker USB Charger"),
-    (370, 430, 500, 560, "Sony Foam Earpods"),
-    (530, 440, 630, 560, "JanSport Nylon Backpack"),
-    (660, 430, 780, 560, "Crocs Rubber Sandals"),
-    (810, 435, 920, 560, "Ray-Ban Plastic Sunglasses"),
-    (950, 430,1070, 560, "REI Synthetic Towel"),
-    (1100,440,1200,560, "Coach PVC Wallet"),
+    (  80, 429,  200, 560, "OtterBox Phone Case"),
+    ( 230, 439,  339, 560, "Anker USB Charger"),
+    ( 370, 429,  500, 560, "Sony Foam Earpods"),
+    ( 530, 439,  630, 560, "JanSport Nylon Backpack"),
+    ( 659, 429,  780, 560, "Crocs Rubber Sandals"),
+    ( 809, 435,  919, 560, "Ray-Ban Plastic Sunglasses"),
+    ( 950, 429, 1070, 560, "REI Synthetic Towel"),
+    (1100, 439, 1200, 560, "Coach PVC Wallet"),
 ]
 
 # ── State ───────────────────────────────────────────────────────────────────────
@@ -364,6 +356,7 @@ if __name__ == "__main__":
     bg = cv2.resize(bg, (WINDOW_W, WINDOW_H))
 
     show_hud = False
+    dismiss_time = 0
 
     while True:
         frame = bg.copy()
@@ -386,7 +379,7 @@ if __name__ == "__main__":
             elapsed  = now - (state.dwell_start or now)
             progress = min(elapsed / DWELL_SECS, 1.0)
 
-            if elapsed >= DWELL_SECS and not scanning and not show_hud:
+            if elapsed >= DWELL_SECS and not scanning and not show_hud and (now - dismiss_time) > 2.0:
                 with state.lock:
                     state.scanning     = True
                     state.scan_result  = None
@@ -423,6 +416,7 @@ if __name__ == "__main__":
             break
         elif key == ord(' '):
             show_hud = False
+            dismiss_time = time.time()
             with state.lock:
                 state.scan_result  = None
                 state.scan_product = None
