@@ -27,7 +27,7 @@ python iris.py
 # Enter your Groq key when prompted
 ```
 
-Open `web/index.html` in Chrome while `iris.py` is running. The browser scanner UI connects to `ws://localhost:8765` for gaze, dwell, and scan result updates.
+Open `web/scanner.html` in Chrome while `iris.py` is running. The browser scanner UI connects to `ws://localhost:8765` for gaze, dwell, and scan result updates.
 
 Or just:
 ```bash

@@ -7,7 +7,14 @@
       "Skill(run)",
       "Bash(pip3 show *)",
       "Bash(python3 iris.py)",
-      "Bash(echo \"PID: $!\")"
+      "Bash(echo \"PID: $!\")",
+      "Bash(python3 -c \"import numpy; print\\('numpy ok'\\)\")",
+      "Bash(python3 /private/tmp/claude-501/-Users-umamanthina-Documents-future-hacks-iris-main-2/57ced34a-2c56-40aa-8042-a33a98e9e2b7/scratchpad/clean_bg2.py background.png)",
+      "Bash(python3 /private/tmp/claude-501/-Users-umamanthina-Documents-future-hacks-iris-main-2/57ced34a-2c56-40aa-8042-a33a98e9e2b7/scratchpad/align_bg.py \".\")",
+      "Bash(python3 /private/tmp/claude-501/-Users-umamanthina-Documents-future-hacks-iris-main-2/57ced34a-2c56-40aa-8042-a33a98e9e2b7/scratchpad/fix_images.py \".\")",
+      "Bash(python3 /private/tmp/claude-501/-Users-umamanthina-Documents-future-hacks-iris-main-2/57ced34a-2c56-40aa-8042-a33a98e9e2b7/scratchpad/fix_bg3.py \".\")",
+      "Bash(python3 /private/tmp/claude-501/-Users-umamanthina-Documents-future-hacks-iris-main-2/57ced34a-2c56-40aa-8042-a33a98e9e2b7/scratchpad/fix_bg4.py \".\")",
+      "Bash(osascript *)"
     ]
   }
 }

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IRIS Scanner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100;9..40,200;9..40,300;9..40,400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --teal:       #00e8ce;
+      --teal-glow:  rgba(0, 232, 206, 0.55);
+      --green:      #4ecb7a;
+      --green-soft: rgba(78, 203, 122, 0.18);
+      --amber:      #f0a842;
+      --cream:      #f4efe6;
+      --ink:        #1c3028;
+      --ink-mid:    rgba(28, 48, 40, 0.62);
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      overflow: hidden;
+    }
+
+    /* Soft organic grain */
+    #grain {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: 0.045;
+      background-size: 220px 220px;
+      background-repeat: repeat;
+    }
+
+    /* Earthy page surround */
+    main {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 12% 55%, rgba(111,165,130,0.20) 0%, transparent 44%),
+        radial-gradient(ellipse at 85% 15%, rgba(180,140,80,0.16) 0%, transparent 40%),
+        radial-gradient(ellipse at 55% 92%, rgba(160,110,70,0.13) 0%, transparent 34%),
+        linear-gradient(148deg, #e0ede5 0%, #ede8dc 48%, #f5eedf 100%);
+    }
+
+    /* Scanner window */
+    .scanner-shell {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: calc(100vw - 24px);
+      height: calc((100vw - 24px) * 9 / 16);
+      max-height: calc(100vh - 24px);
+      max-width: calc((100vh - 24px) * 16 / 9);
+      overflow: hidden;
+      border: 2px solid #6FA5A6;
+      border-radius: 20px;
+      background: #e8f4f0;
+      box-shadow:
+        0 0 0 1px rgba(111, 165, 130, 0.20),
+        0 0 48px rgba(111, 165, 130, 0.24),
+        0 0 80px rgba(180, 140, 80, 0.12),
+        0 28px 64px rgba(0, 0, 0, 0.16);
+    }
+
+    /* Subtle warm vignette only — no cold grid */
+    .scanner-shell::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at var(--gaze-x, 50%) var(--gaze-y, 50%), transparent 0 12%, rgba(0,0,0,0.04) 28%, rgba(0,0,0,0.22) 100%),
+        linear-gradient(to bottom, rgba(255,255,255,0.08), transparent 22%, transparent 78%, rgba(0,0,0,0.14));
+    }
+
+    /* Shelf image — brighter, natural */
+    .scanner-feed {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.05) brightness(0.86) contrast(1.02);
+    }
+
+    .product-zone {
+      position: absolute;
+      z-index: 1;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .product-zone img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.38));
+    }
+
+    /* Back link */
+    .scanner-back {
+      color: rgba(28, 48, 40, 0.52);
+      font-size: 0.58rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .scanner-back:hover { color: var(--ink); }
+
+    /* Topbar — frosted warm strip */
+    .scanner-topbar {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      right: 16px;
+      z-index: 4;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+      background: rgba(244, 239, 230, 0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(111, 165, 166, 0.4);
+      color: var(--ink-mid);
+      font-size: 0.58rem;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    /* Status dot */
+    .scanner-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .scanner-status::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #e07060;
+      box-shadow: 0 0 10px rgba(224, 112, 96, 0.6);
+    }
+    .scanner-status.connected::before {
+      background: #7ab87a;
+      box-shadow: 0 0 10px rgba(122, 184, 122, 0.75);
+    }
+
+    /* Gaze reticle — amber center, sage dwell ring */
+    .scanner-reticle {
+      position: absolute;
+      left: var(--gaze-x, 50%);
+      top: var(--gaze-y, 50%);
+      z-index: 5;
+      width: 72px;
+      height: 72px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(220,155,60,0.95) 0 3px, transparent 4px),
+        conic-gradient(#7ab87a calc(var(--dwell-progress, 0) * 1turn), rgba(122,184,122,0.18) 0);
+      filter: drop-shadow(0 0 10px rgba(180,130,55,0.55));
+      opacity: 0.92;
+      transition: left 0.09s linear, top 0.09s linear;
+    }
+    .scanner-reticle::before,
+    .scanner-reticle::after {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      border: 1.5px solid rgba(122, 184, 122, 0.75);
+      border-radius: 50%;
+      background:
+        linear-gradient(#7ab87a, #7ab87a) 50% -6px / 1px 16px no-repeat,
+        linear-gradient(#7ab87a, #7ab87a) 50% calc(100% + 6px) / 1px 16px no-repeat,
+        linear-gradient(90deg, #7ab87a, #7ab87a) -6px 50% / 16px 1px no-repeat,
+        linear-gradient(90deg, #7ab87a, #7ab87a) calc(100% + 6px) 50% / 16px 1px no-repeat;
+    }
+    .scanner-reticle::after {
+      inset: -10px;
+      border-color: rgba(180, 140, 80, 0.30);
+    }
+
+    /* Info panel — earthy teal-to-green ombre */
+    .scanner-panel {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      z-index: 6;
+      width: min(360px, 36vw);
+      padding: 1.2rem;
+      border-radius: 20px;
+      border: 1.5px solid #6FA5A6;
+      background: linear-gradient(148deg,
+        rgba(111, 165, 166, 0.93) 0%,
+        rgba(95, 155, 130, 0.90) 48%,
+        rgba(78, 140, 95, 0.88) 100%);
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.14),
+        0 0 28px rgba(111,165,166,0.22);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .scanner-panel h1 {
+      color: #2d1608;
+      font-size: 0.82rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .scanner-product {
+      margin-top: 0.6rem;
+      color: #1e3a10;
+      font-size: 0.64rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .scanner-analysis {
+      min-height: 4.4rem;
+      margin: 0.9rem 0;
+      color: rgba(45, 22, 8, 0.80);
+      font-size: 0.76rem;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    .scanner-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+
+    .scanner-metric {
+      min-height: 54px;
+      padding: 0.55rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.16);
+    }
+    .scanner-metric span {
+      display: block;
+      color: rgba(45, 22, 8, 0.58);
+      font-size: 0.44rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .scanner-metric strong {
+      display: block;
+      margin-top: 0.4rem;
+      color: #2d1608;
+      font-size: 0.76rem;
+      font-weight: 500;
+    }
+
+    .scanner-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.32rem;
+      margin-top: 0.75rem;
+    }
+    .scanner-tags span {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.14);
+      padding: 0.22rem 0.55rem;
+      color: #2d1608;
+      font-size: 0.46rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* Threat badge */
+    .scanner-threat {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.26rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #2d1608;
+      font-size: 0.46rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.14);
+    }
+    .scanner-threat.medium {
+      border-color: rgba(240, 168, 66, 0.7);
+      color: #5c3200;
+      background: rgba(240, 168, 66, 0.18);
+    }
+    .scanner-threat.high,
+    .scanner-threat.critical {
+      border-color: rgba(200, 80, 60, 0.6);
+      color: #5c1200;
+      background: rgba(200, 80, 60, 0.16);
+    }
+
+    /* Footer */
+    .scanner-footer {
+      position: absolute;
+      left: 22px;
+      bottom: 22px;
+      z-index: 5;
+      color: rgba(28, 48, 40, 0.42);
+      font-size: 0.52rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="grain" aria-hidden="true"></div>
+
+  <main>
+    <section class="scanner-shell" id="scannerShell" aria-label="Live Iris scanner">
+      <img class="scanner-feed" src="../New_Background.jpg" alt="">
+
+      <!-- Shelf 2 — grocery/plastic -->
+      <div class="product-zone" style="left:6.25%;top:30.56%;width:7.81%;height:22.22%"><img src="assets/evian.png" alt="Evian Plastic Bottle"></div>
+      <div class="product-zone" style="left:16.41%;top:33.33%;width:7.81%;height:19.44%"><img src="assets/tide.png" alt="Tide Detergent Pod"></div>
+      <div class="product-zone" style="left:26.56%;top:31.94%;width:8.59%;height:20.83%"><img src="assets/heinz.png" alt="Heinz Ketchup Bottle"></div>
+      <div class="product-zone" style="left:37.50%;top:34.72%;width:7.81%;height:18.06%"><img src="assets/glad.png" alt="Glad Plastic Wrap"></div>
+      <div class="product-zone" style="left:47.66%;top:31.25%;width:9.38%;height:21.53%"><img src="assets/pantene.png" alt="Pantene Shampoo Bottle"></div>
+      <div class="product-zone" style="left:59.38%;top:33.33%;width:7.81%;height:19.44%"><img src="assets/kellogg.png" alt="Kellogg Cereal Box"></div>
+      <div class="product-zone" style="left:69.53%;top:31.94%;width:8.59%;height:20.83%"><img src="assets/chobani.png" alt="Chobani Yogurt Container"></div>
+      <div class="product-zone" style="left:80.47%;top:32.64%;width:7.81%;height:20.14%"><img src="assets/lays.png" alt="Lays Chips Bag"></div>
+
+      <!-- Shelf 3 — electronics/misc -->
+      <div class="product-zone" style="left:6.25%;top:59.72%;width:9.38%;height:18.06%"><img src="assets/otterbox.png" alt="OtterBox Phone Case"></div>
+      <div class="product-zone" style="left:41.41%;top:61.11%;width:7.81%;height:16.67%"><img src="assets/jansport.png" alt="JanSport Nylon Backpack"></div>
+      <div class="product-zone" style="left:51.56%;top:59.72%;width:9.38%;height:18.06%"><img src="assets/crocs.png" alt="Crocs Rubber Sandals"></div>
+      <div class="product-zone" style="left:63.28%;top:60.42%;width:8.59%;height:17.36%"><img src="assets/rayban.png" alt="Ray-Ban Plastic Sunglasses"></div>
+      <div class="product-zone" style="left:85.94%;top:61.11%;width:7.81%;height:16.67%"><img src="assets/coach.png" alt="Coach PVC Wallet"></div>
+
+      <div class="scanner-topbar">
+        <span><a class="scanner-back" href="index.html#home">← Iris</a> &nbsp;·&nbsp; Live Scanner</span>
+        <span class="scanner-status" id="scannerStatus">Backend offline</span>
+      </div>
+      <div class="scanner-reticle" id="scannerReticle"></div>
+      <aside class="scanner-panel" id="scannerPanel">
+        <div class="scanner-threat" id="scannerThreat">Standby</div>
+        <h1>Environmental Scan</h1>
+        <div class="scanner-product" id="scannerProduct">Awaiting gaze lock</div>
+        <p class="scanner-analysis" id="scannerAnalysis">
+          Start the Python backend, calibrate EyeTrax, then look at a product. Gaze, dwell progress, and scan results will appear here.
+        </p>
+        <div class="scanner-metrics">
+          <div class="scanner-metric">
+            <span id="metric1Label">Microplastic</span>
+            <strong id="metric1Value">--</strong>
+          </div>
+          <div class="scanner-metric">
+            <span id="metric2Label">Recyclable</span>
+            <strong id="metric2Value">--</strong>
+          </div>
+          <div class="scanner-metric">
+            <span id="metric3Label">Impact</span>
+            <strong id="metric3Value">--</strong>
+          </div>
+        </div>
+        <div class="scanner-tags" id="scannerTags">
+          <span>Waiting for backend</span>
+        </div>
+      </aside>
+      <div class="scanner-footer">ws://localhost:8765 · SPACE dismisses in backend window</div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const el = document.getElementById('grain');
+      const size = 220;
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      function tick() {
+        const img = ctx.createImageData(size, size);
+        const d = img.data;
+        for (let i = 0; i < d.length; i += 4) {
+          const v = (Math.random() * 255) | 0;
+          d[i] = d[i + 1] = d[i + 2] = v;
+          d[i + 3] = 255;
+        }
+        ctx.putImageData(img, 0, 0);
+        el.style.backgroundImage = `url(${canvas.toDataURL('image/png')})`;
+      }
+
+      tick();
+      setInterval(tick, 80);
+    })();
+
+    (function () {
+      const shell = document.getElementById('scannerShell');
+      const statusEl = document.getElementById('scannerStatus');
+      const reticle = document.getElementById('scannerReticle');
+      const threatEl = document.getElementById('scannerThreat');
+      const productEl = document.getElementById('scannerProduct');
+      const analysisEl = document.getElementById('scannerAnalysis');
+      const tagsEl = document.getElementById('scannerTags');
+      const metricEls = [
+        [document.getElementById('metric1Label'), document.getElementById('metric1Value')],
+        [document.getElementById('metric2Label'), document.getElementById('metric2Value')],
+        [document.getElementById('metric3Label'), document.getElementById('metric3Value')],
+      ];
+
+      const wsUrl = 'ws://localhost:8765';
+      let socket = null;
+      let reconnectTimer = null;
+
+      function setStatus(text, connected) {
+        statusEl.textContent = text;
+        statusEl.classList.toggle('connected', connected);
+      }
+
+      function setTags(tags) {
+        tagsEl.textContent = '';
+        (tags && tags.length ? tags : ['No tags']).slice(0, 5).forEach((tag) => {
+          const el = document.createElement('span');
+          el.textContent = tag;
+          tagsEl.appendChild(el);
+        });
+      }
+
+      function setThreat(threat) {
+        const normalized = (threat || 'Standby').toLowerCase();
+        threatEl.textContent = threat || 'Standby';
+        threatEl.className = 'scanner-threat ' + normalized;
+      }
+
+      function showStandby() {
+        productEl.textContent = 'Awaiting gaze lock';
+        analysisEl.textContent = 'Look at a product in the backend scanner. The browser HUD will mirror gaze, dwell progress, and environmental scan results.';
+        setThreat('Standby');
+        metricEls.forEach(([label, value], index) => {
+          label.textContent = ['Microplastic', 'Recyclable', 'Impact'][index];
+          value.textContent = '--';
+        });
+        setTags(['Waiting for gaze']);
+      }
+
+      function handleGaze(message) {
+        const x = Math.max(0, Math.min(100, Number(message.x) * 100));
+        const y = Math.max(0, Math.min(100, Number(message.y) * 100));
+        shell.style.setProperty('--gaze-x', x + '%');
+        shell.style.setProperty('--gaze-y', y + '%');
+      }
+
+      function handleDwell(message) {
+        const progress = Math.max(0, Math.min(1, Number(message.progress) || 0));
+        reticle.style.setProperty('--dwell-progress', progress);
+        if (message.product) {
+          productEl.textContent = progress >= 1
+            ? 'Locked: ' + message.product
+            : 'Locking: ' + message.product;
+        } else if (!socket || socket.readyState !== WebSocket.OPEN) {
+          showStandby();
+        } else {
+          productEl.textContent = 'Scanning field';
+        }
+      }
+
+      function handleScanning(message) {
+        productEl.textContent = 'Scanning: ' + (message.product || 'Unknown product');
+        analysisEl.textContent = 'Analyzing material profile, recyclability, microplastic risk, and sustainability signals...';
+        setThreat('Scanning');
+        metricEls.forEach(([label, value], index) => {
+          label.textContent = ['Signal', 'Model', 'Status'][index];
+          value.textContent = ['Live', 'Groq', 'Active'][index];
+        });
+        setTags(['AI scan active', 'Processing']);
+      }
+
+      function handleResult(message) {
+        const result = message.result || {};
+        productEl.textContent = message.product || 'Unknown product';
+        analysisEl.textContent = result.analysis || 'No analysis returned.';
+        setThreat(result.threat || 'Unknown');
+        metricEls[0][0].textContent = result.metric1_label || 'Metric 1';
+        metricEls[0][1].textContent = result.metric1_value || '--';
+        metricEls[1][0].textContent = result.metric2_label || 'Metric 2';
+        metricEls[1][1].textContent = result.metric2_value || '--';
+        metricEls[2][0].textContent = result.metric3_label || 'Metric 3';
+        metricEls[2][1].textContent = result.metric3_value || '--';
+        setTags(result.tags || []);
+      }
+
+      function connect() {
+        clearTimeout(reconnectTimer);
+        setStatus('Connecting backend', false);
+        try {
+          socket = new WebSocket(wsUrl);
+        } catch (error) {
+          setStatus('Backend offline', false);
+          reconnectTimer = setTimeout(connect, 1600);
+          return;
+        }
+
+        socket.addEventListener('open', () => {
+          setStatus('Backend online', true);
+        });
+
+        socket.addEventListener('message', (event) => {
+          let message;
+          try {
+            message = JSON.parse(event.data);
+          } catch (error) {
+            return;
+          }
+
+          if (message.type === 'gaze') handleGaze(message);
+          if (message.type === 'dwell') handleDwell(message);
+          if (message.type === 'scanning') handleScanning(message);
+          if (message.type === 'scan_result') handleResult(message);
+          if (message.type === 'dismiss') showStandby();
+        });
+
+        socket.addEventListener('close', () => {
+          setStatus('Backend offline', false);
+          reconnectTimer = setTimeout(connect, 1600);
+        });
+
+        socket.addEventListener('error', () => {
+          setStatus('Backend offline', false);
+        });
+      }
+
+      showStandby();
+      connect();
+    })();
+  </script>
+</body>
+</html>

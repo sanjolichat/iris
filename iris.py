@@ -25,7 +25,7 @@ from eyetrax.calibration import run_dense_grid_calibration
 API_KEY     = os.environ.get("GROQ_API_KEY", "")
 MODEL       = "meta-llama/llama-4-scout-17b-16e-instruct"
 GROQ_URL    = "https://api.groq.com/openai/v1/chat/completions"
-BG_PATH     = os.path.join(os.path.dirname(__file__), "background.png")
+BG_PATH     = os.path.join(os.path.dirname(__file__), "New_Background.jpg")
 DWELL_SECS  = 1.0
 WINDOW_W    = 1280
 WINDOW_H    = 720
@@ -323,7 +323,7 @@ def gaze_thread(estimator):
                     state.gaze_x = sx
                     state.gaze_y = sy
                 # Broadcast gaze to frontend
-                ws_send({"type": "gaze", "x": sx, "y": sy})
+                ws_send({"type": "gaze", "x": sx / WINDOW_W, "y": sy / WINDOW_H})
             except Exception:
                 pass
     cap.release()

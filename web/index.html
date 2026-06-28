@@ -105,6 +105,10 @@
       height: 100vh;
       min-height: 700px;
       background:
+        radial-gradient(ellipse 38% 44% at 14% 22%, rgba(0, 224, 196, 0.46) 0%, transparent 100%),
+        radial-gradient(ellipse 30% 36% at 82% 18%, rgba(48, 210, 120, 0.34) 0%, transparent 100%),
+        radial-gradient(ellipse 55% 42% at 50% 42%, rgba(0, 200, 175, 0.22) 0%, transparent 80%),
+        radial-gradient(ellipse 70% 28% at 50% 100%, rgba(180, 110, 40, 0.22) 0%, transparent 100%),
         radial-gradient(ellipse 80% 60% at 50% 38%, #3d7470 0%, transparent 70%),
         linear-gradient(175deg, var(--teal-deep) 0%, var(--teal-a) 45%, var(--teal-b) 100%);
       display: flex;
@@ -146,7 +150,7 @@
       position: absolute;
       left: 50%;
       bottom: 18vh;
-      z-index: 21;
+      z-index: 46;
       transform: translateX(-50%);
       display: inline-flex;
       align-items: center;
@@ -179,7 +183,7 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.5);
     }
 
-    /* ── SPLINE EARTH ────────────────────────────────────────── */
+    /* ── SPLINE EARTH + HUD ──────────────────────────────────── */
     .earth-hud {
       position: relative;
       z-index: 45;
@@ -203,7 +207,7 @@
       width: 100%;
       height: 100%;
       --spline-background: transparent;
-      pointer-events: none; /* orbit only — no user drag/rotate */
+      pointer-events: none;
       filter: brightness(1.45) saturate(1.22) contrast(1.02);
     }
 
@@ -314,9 +318,7 @@
       text-align: left;
     }
 
-    .hud-readout.left {
-      left: 28px;
-    }
+    .hud-readout.left { left: 28px; }
 
     .hud-readout.right {
       right: 28px;
@@ -384,8 +386,8 @@
       object-position: bottom center;
       user-select: none;
       -webkit-user-drag: none;
-      /* solid dark — no colour tint, no glow */
-      filter: brightness(0.10);
+      /* dark earthy brown silhouette */
+      filter: sepia(1) hue-rotate(338deg) saturate(1.8) brightness(0.28);
     }
 
     .tree-layer-3 { z-index: 5; }
@@ -397,14 +399,19 @@
     .tree-layer-1 { z-index: 7; }
     .tree-layer-1 img { opacity: 0.96; }
 
-    /* solid dark band at hero bottom — covers any parallax gaps
-       and cuts cleanly into section 2 */
+    /* solid dark band at hero bottom — fades into earthy brown forest shadow */
     .section-hero::after {
       content: '';
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      height: 18vh;
-      background: linear-gradient(to bottom, transparent 0%, #0c1918 55%, #0c1918 100%);
+      height: 24vh;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(30, 12, 4, 0.22) 28%,
+        rgba(30, 12, 4, 0.68) 62%,
+        #1e0c04 100%
+      );
       z-index: 8;
       pointer-events: none;
     }
@@ -414,269 +421,29 @@
       position: relative;
       width: 100%;
       height: 100vh;
-      background: #0c1918;   /* deep shadow tone — SVG layers build up on top */
+      background: #1e0c04;
       scroll-snap-align: start;
       overflow: hidden;
     }
 
-    .vision-image {
+    #features::before {
+      content: '';
       position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 10px solid #4a9490;
-      object-fit: cover;
-      object-position: center;
-    }
-
-    /* ── LIVE SCANNER PAGE ────────────────────────────────────── */
-    #vision {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 7rem 3rem 3rem;
-      background:
-        radial-gradient(circle at 50% 35%, rgba(26, 245, 229, 0.16), transparent 38%),
-        linear-gradient(160deg, #061615 0%, #14302d 54%, #07100f 100%) !important;
-    }
-
-    .scanner-shell {
-      position: relative;
+      top: 0;
+      left: 31%;
+      width: 30%;
+      height: 34vh;
       z-index: 1;
-      width: min(1180px, 94vw);
-      aspect-ratio: 16 / 9;
-      max-height: 78vh;
-      overflow: hidden;
-      border: 1px solid rgba(26, 245, 229, 0.55);
-      border-radius: 18px;
-      background: #061110;
-      box-shadow:
-        0 0 36px rgba(26, 245, 229, 0.18),
-        0 38px 90px rgba(0, 0, 0, 0.44),
-        inset 0 0 48px rgba(26, 245, 229, 0.08);
-    }
-
-    .scanner-shell::before,
-    .scanner-shell::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: 2;
       pointer-events: none;
-    }
-
-    .scanner-shell::before {
-      background:
-        linear-gradient(rgba(26, 245, 229, 0.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(26, 245, 229, 0.055) 1px, transparent 1px);
-      background-size: 44px 44px;
-      mix-blend-mode: screen;
-    }
-
-    .scanner-shell::after {
-      background:
-        radial-gradient(circle at var(--gaze-x, 50%) var(--gaze-y, 50%), transparent 0 9%, rgba(0, 0, 0, 0.08) 20%, rgba(0, 0, 0, 0.45) 100%),
-        linear-gradient(to bottom, rgba(255,255,255,0.05), transparent 18%, transparent 82%, rgba(0,0,0,0.24));
-    }
-
-    .scanner-feed {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: saturate(0.9) brightness(0.62) contrast(1.08);
-    }
-
-    .scanner-topbar {
-      position: absolute;
-      top: 18px;
-      left: 22px;
-      right: 22px;
-      z-index: 4;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: rgba(226, 255, 250, 0.78);
-      font-size: 0.58rem;
-      font-weight: 300;
-      letter-spacing: 0.34em;
-      text-transform: uppercase;
-    }
-
-    .scanner-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.7rem;
-    }
-
-    .scanner-status::before {
-      content: '';
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #ff8b7d;
-      box-shadow: 0 0 14px rgba(255, 139, 125, 0.65);
-    }
-
-    .scanner-status.connected::before {
-      background: #1af5e5;
-      box-shadow: 0 0 16px rgba(26, 245, 229, 0.78);
-    }
-
-    .scanner-reticle {
-      position: absolute;
-      left: var(--gaze-x, 50%);
-      top: var(--gaze-y, 50%);
-      z-index: 5;
-      width: 78px;
-      height: 78px;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      background:
-        radial-gradient(circle, rgba(26, 245, 229, 0.9) 0 3px, transparent 4px),
-        conic-gradient(rgba(26, 245, 229, 1) calc(var(--dwell-progress, 0) * 1turn), rgba(26, 245, 229, 0.18) 0);
-      filter: drop-shadow(0 0 14px rgba(26, 245, 229, 0.55));
-      opacity: 0.9;
-      transition: left 0.09s linear, top 0.09s linear;
-    }
-
-    .scanner-reticle::before,
-    .scanner-reticle::after {
-      content: '';
-      position: absolute;
-      inset: 10px;
-      border: 1px solid rgba(26, 245, 229, 0.72);
-      border-radius: 50%;
-      background:
-        linear-gradient(rgba(26, 245, 229, 0.95), rgba(26, 245, 229, 0.95)) 50% -7px / 1px 18px no-repeat,
-        linear-gradient(rgba(26, 245, 229, 0.95), rgba(26, 245, 229, 0.95)) 50% calc(100% + 7px) / 1px 18px no-repeat,
-        linear-gradient(90deg, rgba(26, 245, 229, 0.95), rgba(26, 245, 229, 0.95)) -7px 50% / 18px 1px no-repeat,
-        linear-gradient(90deg, rgba(26, 245, 229, 0.95), rgba(26, 245, 229, 0.95)) calc(100% + 7px) 50% / 18px 1px no-repeat;
-    }
-
-    .scanner-reticle::after {
-      inset: -10px;
-      border-color: rgba(26, 245, 229, 0.24);
-    }
-
-    .scanner-panel {
-      position: absolute;
-      right: 22px;
-      bottom: 22px;
-      z-index: 6;
-      width: min(390px, 38vw);
-      min-height: 250px;
-      padding: 1.15rem;
-      border: 1px solid rgba(26, 245, 229, 0.64);
-      border-radius: 14px;
-      background: rgba(4, 17, 16, 0.78);
-      box-shadow:
-        0 0 28px rgba(26, 245, 229, 0.16),
-        inset 0 0 34px rgba(26, 245, 229, 0.08);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-
-    .scanner-panel h2 {
-      margin: 0;
-      color: rgba(239, 255, 253, 0.96);
-      font-size: 0.86rem;
-      font-weight: 300;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-    }
-
-    .scanner-product {
-      margin-top: 0.7rem;
-      color: rgba(26, 245, 229, 0.95);
-      font-size: 0.66rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-    }
-
-    .scanner-analysis {
-      min-height: 4.7rem;
-      margin: 1rem 0;
-      color: rgba(210, 246, 241, 0.75);
-      font-size: 0.78rem;
-      font-weight: 300;
-      line-height: 1.65;
-    }
-
-    .scanner-metrics {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.55rem;
-    }
-
-    .scanner-metric {
-      min-height: 58px;
-      padding: 0.55rem;
-      border: 1px solid rgba(26, 245, 229, 0.26);
-      background: rgba(26, 245, 229, 0.055);
-    }
-
-    .scanner-metric span {
-      display: block;
-      color: rgba(204, 255, 250, 0.48);
-      font-size: 0.46rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .scanner-metric strong {
-      display: block;
-      margin-top: 0.42rem;
-      color: rgba(239, 255, 253, 0.95);
-      font-size: 0.78rem;
-      font-weight: 300;
-    }
-
-    .scanner-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-      margin-top: 0.8rem;
-    }
-
-    .scanner-tags span {
-      border: 1px solid rgba(26, 245, 229, 0.28);
-      padding: 0.24rem 0.42rem;
-      color: rgba(26, 245, 229, 0.75);
-      font-size: 0.48rem;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-    }
-
-    .scanner-threat {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      padding: 0.3rem 0.55rem;
-      border: 1px solid rgba(26, 245, 229, 0.5);
-      color: rgba(26, 245, 229, 0.9);
-      font-size: 0.48rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .scanner-threat.high,
-    .scanner-threat.critical {
-      border-color: rgba(255, 139, 125, 0.72);
-      color: rgba(255, 139, 125, 0.95);
-    }
-
-    .scanner-footer {
-      position: absolute;
-      left: 22px;
-      bottom: 22px;
-      z-index: 5;
-      color: rgba(226, 255, 250, 0.55);
-      font-size: 0.58rem;
-      font-weight: 300;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
+      background: linear-gradient(
+        to bottom,
+        #1e0c04 0%,
+        rgba(30, 12, 4, 0.86) 24%,
+        rgba(20, 24, 34, 0.58) 62%,
+        rgba(8, 26, 42, 0) 100%
+      );
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 70%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 70%, transparent 100%);
     }
 
     /* curvy diagonal split for section 2 — SVG positioned inside */
@@ -685,13 +452,10 @@
       inset: 0;
       width: 100%;
       height: 100%;
+      z-index: 0;
       pointer-events: none;
     }
 
-    /* Spline viewer for section 2.
-       left/right/top/bottom are all percentages so the element is always the
-       same fraction of the viewport in both axes — the fixed scale then zooms
-       proportionally at any window size, keeping the animation consistent. */
     .spline-wrap-2 {
       position: absolute;
       left: 15%;
@@ -711,7 +475,6 @@
     }
 
     /* ── FEATURE CARDS (section 2) ──────────────────────────────── */
-    /* Wrapper covers the full section so card % coords are section-relative */
     .feature-cards {
       position: absolute;
       inset: 0;
@@ -719,19 +482,16 @@
       pointer-events: none;
     }
 
-    /* Portrait card — narrow width, min-height forces taller-than-wide shape.
-       Right edge at ~26% keeps it fully inside the dark diagonal area.
-       Kept away from the ring's visual center (~30-35% from left). */
     .feature-card {
       position: absolute;
-      left: 4%;
+      left: 7%;
       top: 50%;
       width: 22%;
       min-height: 50vh;
       transform: translateY(calc(-50% + 20px));
       padding: 2.8rem 2rem 2.4rem;
-      border: 1px solid rgba(114, 196, 191, 0.42);
-      background: rgba(100, 190, 186, 0.04);
+      border: 1px solid rgba(50, 170, 215, 0.42);
+      background: rgba(30, 140, 200, 0.04);
       border-radius: 13px;
       opacity: 0;
       box-shadow: 0 18px 44px rgba(0, 0, 0, 0.12);
@@ -748,43 +508,47 @@
       opacity: 1;
       transform: translateY(-50%);
       background:
-        radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.035) 34%, rgba(255, 255, 255, 0) 68%),
-        linear-gradient(145deg, rgba(114, 196, 191, 0.88), rgba(60, 110, 107, 0.76));
-      border-color: rgba(190, 246, 242, 0.58);
+        radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.045) 34%, rgba(255, 255, 255, 0) 68%),
+        linear-gradient(145deg, rgba(26, 245, 229, 0.9), rgba(22, 190, 166, 0.78));
+      border-color: rgba(176, 255, 247, 0.66);
       box-shadow:
         0 18px 44px rgba(0, 0, 0, 0.18),
+        0 0 34px rgba(26, 245, 229, 0.20),
         inset 0 1px 0 rgba(255, 255, 255, 0.32),
-        inset 0 -32px 70px rgba(22, 74, 72, 0.18);
+        inset 0 -32px 70px rgba(0, 100, 92, 0.20);
       z-index: 3;
       pointer-events: auto;
       cursor: pointer;
     }
 
     .feature-card.active .feature-card-index {
-      color: rgba(223, 255, 250, 0.78);
+      color: rgba(246, 255, 252, 0.9);
+      text-shadow: 0 1px 8px rgba(0, 54, 48, 0.42);
     }
 
     .feature-card.active h3 {
-      color: rgba(246, 255, 253, 0.98);
-      text-shadow: 0 2px 14px rgba(8, 50, 48, 0.28);
+      color: rgba(255, 255, 255, 1);
+      text-shadow: 0 2px 16px rgba(0, 42, 38, 0.48);
     }
 
     .feature-card.active h3::after {
-      background: rgba(223, 255, 250, 0.46);
+      background: rgba(255, 255, 255, 0.62);
     }
 
     .feature-card.active p {
-      color: rgba(238, 255, 252, 0.86);
+      color: rgba(255, 255, 255, 0.94);
+      text-shadow: 0 1px 10px rgba(0, 45, 40, 0.38);
     }
 
     .feature-card.active .feature-card-nav {
-      color: rgba(226, 255, 250, 0.72);
+      color: rgba(246, 255, 252, 0.86);
+      text-shadow: 0 1px 8px rgba(0, 54, 48, 0.36);
     }
 
     .feature-card.stack-1,
     .feature-card.stack-2 {
       background: transparent;
-      border-color: rgba(190, 246, 242, 0.32);
+      border-color: rgba(100, 210, 248, 0.32);
       box-shadow: none;
       overflow: hidden;
     }
@@ -810,7 +574,7 @@
       font-size: 0.5rem;
       font-weight: 300;
       letter-spacing: 0.42em;
-      color: rgba(114, 196, 191, 0.50);
+      color: rgba(60, 180, 220, 0.50);
       text-transform: uppercase;
       margin-bottom: 1.4rem;
     }
@@ -819,25 +583,24 @@
       font-size: 0.9rem;
       font-weight: 200;
       letter-spacing: 0.12em;
-      color: rgba(185, 235, 232, 0.88);
+      color: rgba(165, 225, 248, 0.88);
       text-transform: uppercase;
       margin: 0 0 1.3rem 0;
     }
 
-    /* thin teal rule under title */
     .feature-card h3::after {
       content: '';
       display: block;
       margin-top: 1rem;
       height: 1px;
-      background: rgba(114, 196, 191, 0.25);
+      background: rgba(60, 180, 220, 0.25);
     }
 
     .feature-card p {
       font-size: 0.67rem;
       font-weight: 300;
       line-height: 2;
-      color: rgba(155, 210, 207, 0.65);
+      color: rgba(140, 205, 235, 0.65);
       letter-spacing: 0.02em;
       margin: 0;
       flex: 1;
@@ -848,13 +611,13 @@
       font-size: 0.48rem;
       font-weight: 300;
       letter-spacing: 0.45em;
-      color: rgba(114, 196, 191, 0.38);
+      color: rgba(60, 180, 220, 0.38);
       text-transform: uppercase;
       transition: color 0.2s;
     }
 
     .feature-card.active:hover .feature-card-nav {
-      color: rgba(114, 196, 191, 0.70);
+      color: rgba(60, 180, 220, 0.70);
     }
 
   </style>
@@ -870,8 +633,7 @@
     <ul class="nav-links">
       <li><a href="#home">Home</a></li>
       <li><a href="#features">Features</a></li>
-      <li><a href="#vision">Vision</a></li>
-      <li><a href="#access">Get Access</a></li>
+      <li><a href="scanner.html">Scanner</a></li>
     </ul>
   </nav>
 
@@ -883,7 +645,6 @@
       <p class="hero-subtitle">Environmental Scanner</p>
 
       <div class="earth-hud" aria-hidden="true">
-        <!-- ROTATING EARTH (Spline web component) -->
         <div class="spline-wrap">
           <spline-viewer
             url="https://prod.spline.design/oC8T0dXOUzNcaX3o/scene.splinecode"
@@ -903,7 +664,7 @@
       </div>
     </div>
 
-    <a class="hero-scan-button" href="#vision">Start Scanning</a>
+    <a class="hero-scan-button" href="scanner.html">Start Scanning</a>
 
     <!-- FOREGROUND TREES — 3 parallax layers
          JS sets initial vertical offset (initVh) + scroll-driven translateY.
@@ -948,81 +709,55 @@
 
     <svg class="split-svg" preserveAspectRatio="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
       <defs>
-
-        <!-- Teal right/lower portion: starts in the hero shadow, then opens into turquoise -->
         <linearGradient id="tealGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   stop-color="#0c1918"/>
-          <stop offset="24%"  stop-color="#10211f"/>
-          <stop offset="46%"  stop-color="#244b48"/>
-          <stop offset="72%"  stop-color="#336461"/>
+          <stop offset="0%"   stop-color="#082433"/>
+          <stop offset="22%"  stop-color="#0d3345"/>
+          <stop offset="46%"  stop-color="#174f63"/>
+          <stop offset="72%"  stop-color="#2c666d"/>
           <stop offset="100%" stop-color="#3C6E6B"/>
         </linearGradient>
-
-        <!-- Dark shape base: blends down from the hero shadow, then returns to the section shade -->
         <linearGradient id="darkBase" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   stop-color="#0c1918"/>
-          <stop offset="34%"  stop-color="#0c1918"/>
-          <stop offset="68%"  stop-color="#1a3230"/>
-          <stop offset="100%" stop-color="#0c1918"/>
+          <stop offset="0%"   stop-color="#1e0c04"/>
+          <stop offset="30%"  stop-color="#1b1009"/>
+          <stop offset="56%"  stop-color="#141b25"/>
+          <stop offset="78%"  stop-color="#0f2b3f"/>
+          <stop offset="100%" stop-color="#081a2a"/>
         </linearGradient>
-
-        <!-- Subtle top-left ambient glow (muted so the page transition stays seamless) -->
-        <radialGradient id="ambientGlow" cx="10%" cy="10%" r="65%">
-          <stop offset="0%"   stop-color="#2e5250" stop-opacity="0"/>
-          <stop offset="100%" stop-color="#0c1918" stop-opacity="0"/>
+        <radialGradient id="ambientGlow" cx="68%" cy="6%" r="48%">
+          <stop offset="0%"   stop-color="#12324c" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#12324c" stop-opacity="0"/>
         </radialGradient>
-
-        <!-- Inner shadow along the curved edge — receding depth -->
+        <radialGradient id="blueWash1" cx="82%" cy="28%" r="42%">
+          <stop offset="0%"   stop-color="#1a5a78" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#1a5a78" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="blueWash2" cx="60%" cy="78%" r="38%">
+          <stop offset="0%"   stop-color="#0c3854" stop-opacity="0.16"/>
+          <stop offset="100%" stop-color="#0c3854" stop-opacity="0"/>
+        </radialGradient>
         <linearGradient id="edgeDepth" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%"   stop-color="rgba(0,0,0,0)"/>
           <stop offset="60%"  stop-color="rgba(0,0,0,0)"/>
           <stop offset="100%" stop-color="rgba(0,0,0,0.45)"/>
         </linearGradient>
-
-        <!-- Highlight strip along the TOP of the dark shape (top edge catch) -->
         <linearGradient id="topEdgeLight" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"  stop-color="rgba(120,190,180,0)"/>
+          <stop offset="0%"  stop-color="rgba(120,190,180,0.10)"/>
           <stop offset="8%"  stop-color="rgba(120,190,180,0)"/>
         </linearGradient>
-
-        <!-- Blur for the soft glow stroke on the curve -->
         <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
         </filter>
-
       </defs>
-
-      <!-- ── Dark upper-left shape ───────────────────────── -->
-      <!-- 1. Base gradient fill -->
       <path d="M0,0 L100,0 C70,0 30,100 0,100 Z" fill="url(#darkBase)"/>
-      <!-- 2. Ambient glow from upper-left corner -->
       <path d="M0,0 L100,0 C70,0 30,100 0,100 Z" fill="url(#ambientGlow)"/>
-      <!-- 3. Inner shadow near the curve edge -->
       <path d="M0,0 L100,0 C70,0 30,100 0,100 Z" fill="url(#edgeDepth)"/>
-      <!-- 4. Top-edge highlight strip -->
       <path d="M0,0 L100,0 C70,0 30,100 0,100 Z" fill="url(#topEdgeLight)"/>
-
-      <!-- ── Teal right/lower portion ───────────────────── -->
       <path d="M100,0 L100,100 L0,100 C30,100 70,0 100,0 Z" fill="url(#tealGrad)"/>
-
-      <!-- ── Bevel highlights on the curve edge ─────────── -->
-      <!-- Soft diffuse glow (behind the crisp line) -->
-      <path d="M100,0 C70,0 30,100 0,100"
-            fill="none"
-            stroke="rgba(160,220,210,0.09)"
-            stroke-width="3.5"
-            filter="url(#softGlow)"/>
-      <!-- Crisp bright line — simulates a beveled ridge catching light -->
-      <path d="M100,0 C70,0 30,100 0,100"
-            fill="none"
-            stroke="rgba(160,220,210,0.18)"
-            stroke-width="0.6"/>
-      <!-- Thin dark shadow line just below the highlight (depth of the bevel) -->
-      <path d="M100,0.8 C70,0.8 30,100.8 0,100.8"
-            fill="none"
-            stroke="rgba(0,0,0,0.20)"
-            stroke-width="0.5"/>
-
+      <path d="M100,0 L100,100 L0,100 C30,100 70,0 100,0 Z" fill="url(#blueWash1)"/>
+      <path d="M100,0 L100,100 L0,100 C30,100 70,0 100,0 Z" fill="url(#blueWash2)"/>
+      <path d="M100,0 C70,0 30,100 0,100" fill="none" stroke="rgba(80,200,240,0.10)" stroke-width="3.5" filter="url(#softGlow)"/>
+      <path d="M100,0 C70,0 30,100 0,100" fill="none" stroke="rgba(80,200,240,0.22)" stroke-width="0.6"/>
+      <path d="M100,0.8 C70,0.8 30,100.8 0,100.8" fill="none" stroke="rgba(0,0,0,0.20)" stroke-width="0.5"/>
     </svg>
 
     <div class="spline-wrap-2">
@@ -1033,45 +768,6 @@
     </div>
 
   </section>
-
-  <!-- ─────────── SECTION 3 ─────────── -->
-  <section class="section-blank" id="vision" style="background: linear-gradient(160deg, #4a9490 0%, #5db0ab 55%, #72c4bf 100%);">
-    <div class="scanner-shell" id="scannerShell">
-      <img class="scanner-feed" src="../background.png" alt="Iris scanner product shelf">
-      <div class="scanner-topbar">
-        <span>IRIS LIVE SCANNER</span>
-        <span class="scanner-status" id="scannerStatus">Backend offline</span>
-      </div>
-      <div class="scanner-reticle" id="scannerReticle"></div>
-      <aside class="scanner-panel" id="scannerPanel">
-        <div class="scanner-threat" id="scannerThreat">Standby</div>
-        <h2>Environmental Scan</h2>
-        <div class="scanner-product" id="scannerProduct">Awaiting gaze lock</div>
-        <p class="scanner-analysis" id="scannerAnalysis">
-          Start the Python backend, calibrate EyeTrax, then look at a product. Gaze, dwell progress, and scan results will appear here.
-        </p>
-        <div class="scanner-metrics">
-          <div class="scanner-metric">
-            <span id="metric1Label">Microplastic</span>
-            <strong id="metric1Value">--</strong>
-          </div>
-          <div class="scanner-metric">
-            <span id="metric2Label">Recyclable</span>
-            <strong id="metric2Value">--</strong>
-          </div>
-          <div class="scanner-metric">
-            <span id="metric3Label">Impact</span>
-            <strong id="metric3Value">--</strong>
-          </div>
-        </div>
-        <div class="scanner-tags" id="scannerTags">
-          <span>Waiting for backend</span>
-        </div>
-      </aside>
-      <div class="scanner-footer">ws://localhost:8765 · SPACE dismisses in backend window</div>
-    </div>
-  </section>
-
 
   <script>
     /* ── ANIMATED CANVAS GRAIN ──────────────────────────────────
@@ -1174,148 +870,6 @@
 
       show(0);
       startAutoAdvance();
-    })();
-
-    /* ── LIVE SCANNER WEBSOCKET ───────────────────────────────── */
-    (function () {
-      const shell = document.getElementById('scannerShell');
-      if (!shell) return;
-
-      const statusEl = document.getElementById('scannerStatus');
-      const reticle = document.getElementById('scannerReticle');
-      const threatEl = document.getElementById('scannerThreat');
-      const productEl = document.getElementById('scannerProduct');
-      const analysisEl = document.getElementById('scannerAnalysis');
-      const tagsEl = document.getElementById('scannerTags');
-      const metricEls = [
-        [document.getElementById('metric1Label'), document.getElementById('metric1Value')],
-        [document.getElementById('metric2Label'), document.getElementById('metric2Value')],
-        [document.getElementById('metric3Label'), document.getElementById('metric3Value')],
-      ];
-
-      const WS_URL = 'ws://localhost:8765';
-      let socket = null;
-      let reconnectTimer = null;
-
-      function setStatus(text, connected) {
-        statusEl.textContent = text;
-        statusEl.classList.toggle('connected', connected);
-      }
-
-      function setTags(tags) {
-        tagsEl.textContent = '';
-        (tags && tags.length ? tags : ['No tags']).slice(0, 5).forEach((tag) => {
-          const el = document.createElement('span');
-          el.textContent = tag;
-          tagsEl.appendChild(el);
-        });
-      }
-
-      function setThreat(threat) {
-        const normalized = (threat || 'Standby').toLowerCase();
-        threatEl.textContent = threat || 'Standby';
-        threatEl.className = 'scanner-threat ' + normalized;
-      }
-
-      function showStandby() {
-        productEl.textContent = 'Awaiting gaze lock';
-        analysisEl.textContent = 'Look at a product in the backend scanner. The browser HUD will mirror gaze, dwell progress, and environmental scan results.';
-        setThreat('Standby');
-        metricEls.forEach(([label, value], index) => {
-          label.textContent = ['Microplastic', 'Recyclable', 'Impact'][index];
-          value.textContent = '--';
-        });
-        setTags(['Waiting for gaze']);
-      }
-
-      function handleGaze(message) {
-        const x = Math.max(0, Math.min(100, (Number(message.x) / 1280) * 100));
-        const y = Math.max(0, Math.min(100, (Number(message.y) / 720) * 100));
-        shell.style.setProperty('--gaze-x', x + '%');
-        shell.style.setProperty('--gaze-y', y + '%');
-      }
-
-      function handleDwell(message) {
-        const progress = Math.max(0, Math.min(1, Number(message.progress) || 0));
-        reticle.style.setProperty('--dwell-progress', progress);
-        if (message.product) {
-          productEl.textContent = progress >= 1
-            ? 'Locked: ' + message.product
-            : 'Locking: ' + message.product;
-        } else if (!socket || socket.readyState !== WebSocket.OPEN) {
-          showStandby();
-        } else {
-          productEl.textContent = 'Scanning field';
-        }
-      }
-
-      function handleScanning(message) {
-        productEl.textContent = 'Scanning: ' + (message.product || 'Unknown product');
-        analysisEl.textContent = 'Analyzing material profile, recyclability, microplastic risk, and sustainability signals...';
-        setThreat('Scanning');
-        metricEls.forEach(([label, value], index) => {
-          label.textContent = ['Signal', 'Model', 'Status'][index];
-          value.textContent = ['Live', 'Groq', 'Active'][index];
-        });
-        setTags(['AI scan active', 'Processing']);
-      }
-
-      function handleResult(message) {
-        const result = message.result || {};
-        productEl.textContent = message.product || 'Unknown product';
-        analysisEl.textContent = result.analysis || 'No analysis returned.';
-        setThreat(result.threat || 'Unknown');
-        metricEls[0][0].textContent = result.metric1_label || 'Metric 1';
-        metricEls[0][1].textContent = result.metric1_value || '--';
-        metricEls[1][0].textContent = result.metric2_label || 'Metric 2';
-        metricEls[1][1].textContent = result.metric2_value || '--';
-        metricEls[2][0].textContent = result.metric3_label || 'Metric 3';
-        metricEls[2][1].textContent = result.metric3_value || '--';
-        setTags(result.tags || []);
-      }
-
-      function connect() {
-        clearTimeout(reconnectTimer);
-        setStatus('Connecting backend', false);
-        try {
-          socket = new WebSocket(WS_URL);
-        } catch (error) {
-          setStatus('Backend offline', false);
-          reconnectTimer = setTimeout(connect, 1600);
-          return;
-        }
-
-        socket.addEventListener('open', () => {
-          setStatus('Backend online', true);
-        });
-
-        socket.addEventListener('message', (event) => {
-          let message;
-          try {
-            message = JSON.parse(event.data);
-          } catch (error) {
-            return;
-          }
-
-          if (message.type === 'gaze') handleGaze(message);
-          if (message.type === 'dwell') handleDwell(message);
-          if (message.type === 'scanning') handleScanning(message);
-          if (message.type === 'scan_result') handleResult(message);
-          if (message.type === 'dismiss') showStandby();
-        });
-
-        socket.addEventListener('close', () => {
-          setStatus('Backend offline', false);
-          reconnectTimer = setTimeout(connect, 1600);
-        });
-
-        socket.addEventListener('error', () => {
-          setStatus('Backend offline', false);
-        });
-      }
-
-      showStandby();
-      connect();
     })();
 
     /* ── PARALLAX TREES ─────────────────────────────────────────
