@@ -18,7 +18,7 @@ Today it's a Python app. Tomorrow it lives in AR glasses.
 
 ```bash
 # 1. Install dependencies
-pip install eyetrax opencv-python numpy
+pip install eyetrax opencv-python numpy requests websockets
 
 # 2. Get a free Groq API key at groq.com (no credit card)
 
@@ -26,6 +26,8 @@ pip install eyetrax opencv-python numpy
 python iris.py
 # Enter your Groq key when prompted
 ```
+
+Open `web/index.html` in Chrome while `iris.py` is running. The browser scanner UI connects to `ws://localhost:8765` for gaze, dwell, and scan result updates.
 
 Or just:
 ```bash

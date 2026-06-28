@@ -17,7 +17,7 @@ fi
 
 # Install dependencies
 echo "Installing dependencies..."
-pip3 install eyetrax opencv-python numpy requests --quiet
+pip3 install eyetrax opencv-python numpy requests websockets --quiet
 
 echo ""
 echo "Starting Iris..."
