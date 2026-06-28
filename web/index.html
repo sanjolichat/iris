@@ -196,7 +196,7 @@
     .spline-wrap {
       position: absolute;
       left: calc(54% - 13px);
-      top: 26px;
+      top: 21px;
       width: 1100px;
       height: 1100px;
       transform: translateX(-50%) scale(0.29);
@@ -207,6 +207,7 @@
       width: 100%;
       height: 100%;
       --spline-background: transparent;
+      background: transparent !important;
       pointer-events: none;
       filter: brightness(1.45) saturate(1.22) contrast(1.02);
     }
@@ -430,20 +431,21 @@
       content: '';
       position: absolute;
       top: 0;
-      left: 31%;
-      width: 30%;
-      height: 34vh;
+      left: 0;
+      width: 62%;
+      height: 38vh;
       z-index: 1;
       pointer-events: none;
       background: linear-gradient(
         to bottom,
         #1e0c04 0%,
-        rgba(30, 12, 4, 0.86) 24%,
-        rgba(20, 24, 34, 0.58) 62%,
+        #1e0c04 24%,
+        rgba(30, 12, 4, 0.88) 40%,
+        rgba(20, 24, 34, 0.58) 72%,
         rgba(8, 26, 42, 0) 100%
       );
-      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 70%, transparent 100%);
-      mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 70%, transparent 100%);
+      -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 82%, transparent 100%);
+      mask-image: linear-gradient(90deg, #000 0%, #000 82%, transparent 100%);
     }
 
     /* curvy diagonal split for section 2 — SVG positioned inside */
@@ -646,10 +648,7 @@
 
       <div class="earth-hud" aria-hidden="true">
         <div class="spline-wrap">
-          <spline-viewer
-            url="https://prod.spline.design/oC8T0dXOUzNcaX3o/scene.splinecode"
-            background="transparent"
-          ></spline-viewer>
+          <spline-viewer url="https://prod.spline.design/oC8T0dXOUzNcaX3o/scene.splinecode" background="transparent"></spline-viewer>
         </div>
         <div class="earth-hud-frame">
           <span class="hud-corner tl"></span>
@@ -718,15 +717,12 @@
         </linearGradient>
         <linearGradient id="darkBase" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%"   stop-color="#1e0c04"/>
-          <stop offset="30%"  stop-color="#1b1009"/>
-          <stop offset="56%"  stop-color="#141b25"/>
-          <stop offset="78%"  stop-color="#0f2b3f"/>
+          <stop offset="24%"  stop-color="#1e0c04"/>
+          <stop offset="42%"  stop-color="#1b1009"/>
+          <stop offset="66%"  stop-color="#141b25"/>
+          <stop offset="84%"  stop-color="#0f2b3f"/>
           <stop offset="100%" stop-color="#081a2a"/>
         </linearGradient>
-        <radialGradient id="ambientGlow" cx="68%" cy="6%" r="48%">
-          <stop offset="0%"   stop-color="#12324c" stop-opacity="0.18"/>
-          <stop offset="100%" stop-color="#12324c" stop-opacity="0"/>
-        </radialGradient>
         <radialGradient id="blueWash1" cx="82%" cy="28%" r="42%">
           <stop offset="0%"   stop-color="#1a5a78" stop-opacity="0.18"/>
           <stop offset="100%" stop-color="#1a5a78" stop-opacity="0"/>
@@ -740,22 +736,12 @@
           <stop offset="60%"  stop-color="rgba(0,0,0,0)"/>
           <stop offset="100%" stop-color="rgba(0,0,0,0.45)"/>
         </linearGradient>
-        <linearGradient id="topEdgeLight" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"  stop-color="rgba(120,190,180,0.10)"/>
-          <stop offset="8%"  stop-color="rgba(120,190,180,0)"/>
-        </linearGradient>
-        <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
-        </filter>
       </defs>
       <path d="M0,0 L100,0 C70,0 30,100 0,100 Z" fill="url(#darkBase)"/>
-      <path d="M0,0 L100,0 C70,0 30,100 0,100 Z" fill="url(#ambientGlow)"/>
       <path d="M0,0 L100,0 C70,0 30,100 0,100 Z" fill="url(#edgeDepth)"/>
-      <path d="M0,0 L100,0 C70,0 30,100 0,100 Z" fill="url(#topEdgeLight)"/>
       <path d="M100,0 L100,100 L0,100 C30,100 70,0 100,0 Z" fill="url(#tealGrad)"/>
       <path d="M100,0 L100,100 L0,100 C30,100 70,0 100,0 Z" fill="url(#blueWash1)"/>
       <path d="M100,0 L100,100 L0,100 C30,100 70,0 100,0 Z" fill="url(#blueWash2)"/>
-      <path d="M100,0 C70,0 30,100 0,100" fill="none" stroke="rgba(80,200,240,0.10)" stroke-width="3.5" filter="url(#softGlow)"/>
       <path d="M100,0 C70,0 30,100 0,100" fill="none" stroke="rgba(80,200,240,0.22)" stroke-width="0.6"/>
       <path d="M100,0.8 C70,0.8 30,100.8 0,100.8" fill="none" stroke="rgba(0,0,0,0.20)" stroke-width="0.5"/>
     </svg>
@@ -823,7 +809,8 @@
             '[class*="logo"]',
             '[class*="badge"]',
             '[class*="watermark"]',
-          ].join(',') + '{ display:none!important; }';
+          ].join(',') + '{ display:none!important; }' +
+          'canvas, div { background: transparent !important; }';
           shadow.appendChild(s);
         } catch (e) {}
       }

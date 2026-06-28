@@ -267,6 +267,16 @@
         0 0 28px rgba(111,165,166,0.22);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition: opacity 0.24s ease, transform 0.24s ease;
+      pointer-events: auto;
+    }
+
+    .scanner-panel.is-hidden {
+      opacity: 0;
+      transform: translateY(12px) scale(0.97);
+      pointer-events: none;
     }
 
     .scanner-panel h1 {
@@ -405,6 +415,7 @@
       <div class="product-zone" style="left:41.41%;top:61.11%;width:7.81%;height:16.67%"><img src="assets/jansport.png" alt="JanSport Nylon Backpack"></div>
       <div class="product-zone" style="left:51.56%;top:59.72%;width:9.38%;height:18.06%"><img src="assets/crocs.png" alt="Crocs Rubber Sandals"></div>
       <div class="product-zone" style="left:63.28%;top:60.42%;width:8.59%;height:17.36%"><img src="assets/rayban.png" alt="Ray-Ban Plastic Sunglasses"></div>
+      <div class="product-zone" style="left:74.22%;top:59.72%;width:9.38%;height:18.06%"><img src="../REI.avif" alt="REI Synthetic Towel"></div>
       <div class="product-zone" style="left:85.94%;top:61.11%;width:7.81%;height:16.67%"><img src="assets/coach.png" alt="Coach PVC Wallet"></div>
 
       <div class="scanner-topbar">
@@ -469,6 +480,7 @@
       const shell = document.getElementById('scannerShell');
       const statusEl = document.getElementById('scannerStatus');
       const reticle = document.getElementById('scannerReticle');
+      const panelEl = document.getElementById('scannerPanel');
       const threatEl = document.getElementById('scannerThreat');
       const productEl = document.getElementById('scannerProduct');
       const analysisEl = document.getElementById('scannerAnalysis');
@@ -503,7 +515,12 @@
         threatEl.className = 'scanner-threat ' + normalized;
       }
 
+      function setPanelVisible(visible) {
+        panelEl.classList.toggle('is-hidden', !visible);
+      }
+
       function showStandby() {
+        setPanelVisible(false);
         productEl.textContent = 'Awaiting gaze lock';
         analysisEl.textContent = 'Look at a product in the backend scanner. The browser HUD will mirror gaze, dwell progress, and environmental scan results.';
         setThreat('Standby');
@@ -525,17 +542,20 @@
         const progress = Math.max(0, Math.min(1, Number(message.progress) || 0));
         reticle.style.setProperty('--dwell-progress', progress);
         if (message.product) {
+          setPanelVisible(progress >= 1);
           productEl.textContent = progress >= 1
             ? 'Locked: ' + message.product
             : 'Locking: ' + message.product;
         } else if (!socket || socket.readyState !== WebSocket.OPEN) {
           showStandby();
         } else {
+          setPanelVisible(false);
           productEl.textContent = 'Scanning field';
         }
       }
 
       function handleScanning(message) {
+        setPanelVisible(true);
         productEl.textContent = 'Scanning: ' + (message.product || 'Unknown product');
         analysisEl.textContent = 'Analyzing material profile, recyclability, microplastic risk, and sustainability signals...';
         setThreat('Scanning');
@@ -547,6 +567,7 @@
       }
 
       function handleResult(message) {
+        setPanelVisible(true);
         const result = message.result || {};
         productEl.textContent = message.product || 'Unknown product';
         analysisEl.textContent = result.analysis || 'No analysis returned.';
