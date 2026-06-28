@@ -186,6 +186,7 @@
     /* ── SPLINE EARTH + HUD ──────────────────────────────────── */
     .earth-hud {
       position: relative;
+      top: 7px;
       z-index: 45;
       width: min(440px, 70vw);
       height: 300px;
@@ -195,11 +196,11 @@
 
     .spline-wrap {
       position: absolute;
-      left: calc(54% - 13px);
-      top: 21px;
+      left: calc(54% - 68px);
+      top: -129px;
       width: 1100px;
       height: 1100px;
-      transform: translateX(-50%) scale(0.29);
+      transform: translateX(-50%) scale(0.5075);
       transform-origin: top center;
     }
 
@@ -622,6 +623,24 @@
       color: rgba(60, 180, 220, 0.70);
     }
 
+    .feature-scan-button {
+      align-self: flex-start;
+      margin-top: 1.35rem;
+      padding: 0.78rem 1.2rem;
+      border: 1px solid rgba(204, 255, 250, 0.82);
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(26, 245, 229, 0.98), rgba(72, 218, 211, 0.94));
+      box-shadow:
+        0 0 22px rgba(26, 245, 229, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.42);
+      color: rgba(3, 38, 36, 0.92);
+      font-size: 0.52rem;
+      font-weight: 300;
+      letter-spacing: 0.28em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
   </style>
 </head>
 <body>
@@ -687,21 +706,19 @@
 
     <div class="feature-cards">
       <div class="feature-card active">
-        <div class="feature-card-index">01 — Scan</div>
-        <h3>Real-Time Scanning</h3>
-        <p>Iris continuously monitors your surroundings — air quality, light, and sound — translating the invisible into a clear, living picture of your environment.</p>
+        <h3>What Is Iris</h3>
+        <p>Iris detects what you're looking at and summarizes the environmental impact of any action you may take, analyzing carbon footprint, source, and sustainability.</p>
         <div class="feature-card-nav">Click to continue</div>
       </div>
       <div class="feature-card">
-        <div class="feature-card-index">02 — Analyze</div>
-        <h3>AI Analysis</h3>
-        <p>On-device machine learning cross-references sensor streams in milliseconds, surfacing anomalies and patterns before they escalate into problems.</p>
+        <h3>Iris In The Future</h3>
+        <p>With expanding technologies like smart glasses, the way humans understand and interact with the world will shift. With Iris, we ensure that environmental awareness remains integral throughout this change, and even grows alongside.</p>
         <div class="feature-card-nav">Click to continue</div>
       </div>
       <div class="feature-card">
-        <div class="feature-card-index">03 — Respond</div>
-        <h3>Smart Alerts</h3>
-        <p>Contextual notifications reach you only when they matter — calibrated to your space, your routine, and your personal sensitivity thresholds.</p>
+        <h3>How To Use It</h3>
+        <p>Look at the objects in your environment, and read the environmental summary! Click the space key to continue scanning.</p>
+        <a class="feature-scan-button" href="scanner.html">Start Scanning</a>
         <div class="feature-card-nav">Click to restart</div>
       </div>
     </div>
@@ -848,6 +865,12 @@
           if (!card.classList.contains('active')) return;
           show((cur + 1) % cards.length);
           startAutoAdvance();
+        });
+      });
+
+      document.querySelectorAll('.feature-scan-button').forEach((button) => {
+        button.addEventListener('click', (event) => {
+          event.stopPropagation();
         });
       });
 
