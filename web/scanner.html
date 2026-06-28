@@ -448,7 +448,7 @@
           <span>Waiting for backend</span>
         </div>
       </aside>
-      <div class="scanner-footer">ws://localhost:8765 · SPACE dismisses in backend window</div>
+      <div class="scanner-footer">ws://localhost:8765 · result stays until SPACE dismisses in backend window</div>
     </section>
   </main>
 
@@ -494,7 +494,8 @@
       const wsUrl = 'ws://localhost:8765';
       let socket = null;
       let reconnectTimer = null;
-      let hasResult = false;
+      let popupLocked = false;
+      let popupArmed = false;
       let dismissedAt = 0;
 
       function setStatus(text, connected) {
@@ -521,8 +522,8 @@
         panelEl.classList.toggle('is-hidden', !visible);
       }
 
-      function showStandby() {
-        if (hasResult) return;
+      function showStandby(force = false) {
+        if ((popupLocked || popupArmed) && !force) return;
         setPanelVisible(false);
         productEl.textContent = 'Awaiting gaze lock';
         analysisEl.textContent = 'Look at a product in the backend scanner. The browser HUD will mirror gaze, dwell progress, and environmental scan results.';
@@ -544,10 +545,23 @@
       function handleDwell(message) {
         const progress = Math.max(0, Math.min(1, Number(message.progress) || 0));
         reticle.style.setProperty('--dwell-progress', progress);
-        if (hasResult) return;
+        if (popupLocked || popupArmed) return;
         if (Date.now() - dismissedAt < 2000) return; // cooldown after dismiss
         if (message.product) {
-          setPanelVisible(progress >= 1);
+          if (progress >= 1) {
+            popupArmed = true;
+            popupLocked = true;
+            setPanelVisible(true);
+            analysisEl.textContent = 'Gaze lock confirmed. Starting AI environmental scan...';
+            setThreat('Scanning');
+            metricEls.forEach(([label, value], index) => {
+              label.textContent = ['Signal', 'Model', 'Status'][index];
+              value.textContent = ['Locked', 'Queued', 'Starting'][index];
+            });
+            setTags(['Gaze locked', 'AI queued']);
+          } else {
+            setPanelVisible(false);
+          }
           productEl.textContent = progress >= 1
             ? 'Locked: ' + message.product
             : 'Locking: ' + message.product;
@@ -561,7 +575,8 @@
       }
 
       function handleScanning(message) {
-        hasResult = true;
+        popupArmed = false;
+        popupLocked = true;
         setPanelVisible(true);
         productEl.textContent = 'Scanning: ' + (message.product || 'Unknown product');
         analysisEl.textContent = 'Analyzing material profile, recyclability, microplastic risk, and sustainability signals...';
@@ -573,10 +588,9 @@
         setTags(['AI scan active', 'Processing']);
       }
 
-      let autoDismissTimer = null;
-
       function handleResult(message) {
-        hasResult = true;
+        popupArmed = false;
+        popupLocked = true;
         setPanelVisible(true);
         const result = message.result || {};
         productEl.textContent = message.product || 'Unknown product';
@@ -589,14 +603,6 @@
         metricEls[2][0].textContent = result.metric3_label || 'Metric 3';
         metricEls[2][1].textContent = result.metric3_value || '--';
         setTags(result.tags || []);
-        // Auto-dismiss after 5 seconds
-        clearTimeout(autoDismissTimer);
-        autoDismissTimer = setTimeout(() => {
-          hasResult = false;
-          dismissedAt = Date.now();
-          setPanelVisible(false);
-          showStandby();
-        }, 5000);
       }
 
       function connect() {
@@ -627,9 +633,10 @@
           if (message.type === 'scanning') handleScanning(message);
           if (message.type === 'scan_result') handleResult(message);
           if (message.type === 'dismiss') {
-            hasResult = false;
+            popupArmed = false;
+            popupLocked = false;
             dismissedAt = Date.now();
-            showStandby();
+            showStandby(true);
           }
         });
 
@@ -642,6 +649,18 @@
           setStatus('Backend offline', false);
         });
       }
+
+      window.addEventListener('keydown', (event) => {
+        if (event.code !== 'Space' || panelEl.classList.contains('is-hidden')) return;
+        event.preventDefault();
+        if (socket && socket.readyState === WebSocket.OPEN) {
+          socket.send(JSON.stringify({ type: 'dismiss' }));
+        }
+        popupArmed = false;
+        popupLocked = false;
+        dismissedAt = Date.now();
+        showStandby(true);
+      });
 
       showStandby();
       connect();

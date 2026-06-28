@@ -17,6 +17,7 @@ import sys
 import asyncio
 import websockets
 import requests as _requests
+from getpass import getpass
 
 from eyetrax import GazeEstimator, run_9_point_calibration, run_lissajous_calibration
 from eyetrax.calibration import run_dense_grid_calibration
@@ -72,6 +73,8 @@ class IrisState:
         self.scan_result   = None
         self.scan_product  = None
         self.show_hud      = False
+        self.scan_id       = 0
+        self.dismiss_requested = False
         self.lock          = threading.Lock()
 
 state = IrisState()
@@ -84,7 +87,21 @@ async def ws_handler(websocket):
     connected_clients.add(websocket)
     print(f"[WS] Frontend connected ({len(connected_clients)} clients)")
     try:
-        await websocket.wait_closed()
+        async for raw in websocket:
+            try:
+                message = json.loads(raw)
+            except Exception:
+                continue
+            if message.get("type") == "dismiss":
+                with state.lock:
+                    state.scan_result = None
+                    state.scan_product = None
+                    state.scanning = False
+                    state.dwell_start = None
+                    state.dwell_product = None
+                    state.scan_id += 1
+                    state.dismiss_requested = True
+                await broadcast({"type": "dismiss"})
     finally:
         connected_clients.discard(websocket)
         print(f"[WS] Frontend disconnected ({len(connected_clients)} clients)")
@@ -124,6 +141,16 @@ def start_ws_server():
 # ── Groq API ────────────────────────────────────────────────────────────────────
 
 def call_groq(product_label):
+    if not API_KEY:
+        return {
+            "analysis": "Scan error: GROQ_API_KEY is not set in the terminal running iris.py.",
+            "threat": "UNKNOWN",
+            "metric1_label": "Error", "metric1_value": "No API key",
+            "metric2_label": "Backend", "metric2_value": "Check env",
+            "metric3_label": "Scan", "metric3_value": "Stopped",
+            "tags": ["API KEY MISSING"]
+        }
+
     prompt = f"""You are Iris, an environmental AI scanner built into smart glasses.
 The user is looking at: "{product_label}".
 
@@ -173,13 +200,26 @@ Threat must be one of: CRITICAL, HIGH, MEDIUM, LOW."""
             "tags": ["SCAN FAILED"]
         }
 
-def scan_async(product_label):
+def ensure_api_key():
+    global API_KEY
+    if API_KEY:
+        return
+    print("GROQ_API_KEY is not set.")
+    API_KEY = getpass("Paste your Groq API key, then press Enter: ").strip()
+    if not API_KEY:
+        print("No Groq API key entered. Scans will show an API key error.")
+
+def scan_async(product_label, scan_id):
+    print(f"[SCAN] Starting AI scan #{scan_id}: {product_label}")
     # Tell frontend scanning has started
-    ws_send({"type": "scanning", "product": product_label})
+    ws_send({"type": "scanning", "product": product_label, "scan_id": scan_id})
 
     result = call_groq(product_label)
 
     with state.lock:
+        if state.scan_id != scan_id or state.scan_product != product_label:
+            print(f"[SCAN] Ignored stale scan #{scan_id}: {product_label}")
+            return
         state.scan_result  = result
         state.scan_product = product_label
         state.scanning     = False
@@ -188,8 +228,10 @@ def scan_async(product_label):
     ws_send({
         "type": "scan_result",
         "product": product_label,
+        "scan_id": scan_id,
         "result": result
     })
+    print(f"[SCAN] Sent result #{scan_id}: {product_label}")
 
 # ── Product detection ───────────────────────────────────────────────────────────
 
@@ -323,8 +365,7 @@ def gaze_thread(estimator):
 # ── Main ─────────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    if not API_KEY:
-        API_KEY = input("Groq API key (gsk_...): ").strip()
+    ensure_api_key()
 
     print("\n=== IRIS Environmental Scanner ===")
     print("Calibrating eye tracker — follow the dots with your eyes.\n")
@@ -371,6 +412,22 @@ if __name__ == "__main__":
         product = product_at(gx, gy)
         now     = time.time()
 
+        with state.lock:
+            dismiss_requested = state.dismiss_requested
+            if dismiss_requested:
+                state.dismiss_requested = False
+
+        if dismiss_requested:
+            show_hud = False
+            dismiss_time = now
+            with state.lock:
+                state.scan_result  = None
+                state.scan_product = None
+                state.scanning     = False
+                state.dwell_start  = None
+                state.dwell_product = None
+                state.scan_id += 1
+
         # Dwell logic
         if product:
             if state.dwell_product != product:
@@ -379,13 +436,15 @@ if __name__ == "__main__":
             elapsed  = now - (state.dwell_start or now)
             progress = min(elapsed / DWELL_SECS, 1.0)
 
-            if elapsed >= DWELL_SECS and not scanning and not show_hud and (now - dismiss_time) > 2.0:
+            if elapsed >= DWELL_SECS and not scanning and scan_result is None and (now - dismiss_time) > 2.0:
                 with state.lock:
                     state.scanning     = True
                     state.scan_result  = None
                     state.scan_product = product
+                    state.scan_id += 1
+                    scan_id = state.scan_id
                 show_hud = True
-                threading.Thread(target=scan_async, args=(product,), daemon=True).start()
+                threading.Thread(target=scan_async, args=(product, scan_id), daemon=True).start()
         else:
             state.dwell_product = None
             state.dwell_start   = None
@@ -421,6 +480,7 @@ if __name__ == "__main__":
                 state.scan_result  = None
                 state.scan_product = None
                 state.scanning     = False
+                state.scan_id += 1
             state.dwell_start   = None
             state.dwell_product = None
             ws_send({"type": "dismiss"})
