@@ -142,6 +142,43 @@
       text-transform: uppercase;
     }
 
+    .hero-scan-button {
+      position: absolute;
+      left: 50%;
+      bottom: 18vh;
+      z-index: 21;
+      transform: translateX(-50%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 178px;
+      padding: 0.95rem 1.5rem;
+      border: 1px solid rgba(204, 255, 250, 0.82);
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(26, 245, 229, 0.98), rgba(72, 218, 211, 0.94));
+      box-shadow:
+        0 0 24px rgba(26, 245, 229, 0.34),
+        0 18px 44px rgba(2, 18, 17, 0.36),
+        inset 0 1px 0 rgba(255, 255, 255, 0.42);
+      color: rgba(3, 38, 36, 0.92);
+      font-size: 0.62rem;
+      font-weight: 300;
+      letter-spacing: 0.28em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .hero-scan-button:hover {
+      transform: translateX(-50%) translateY(-2px);
+      background: linear-gradient(135deg, rgba(50, 255, 242, 1), rgba(104, 238, 231, 0.98));
+      border-color: rgba(235, 255, 253, 0.92);
+      box-shadow:
+        0 0 34px rgba(26, 245, 229, 0.48),
+        0 20px 48px rgba(2, 18, 17, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
     /* ── SPLINE EARTH ────────────────────────────────────────── */
     .spline-wrap {
       position: absolute;
@@ -241,6 +278,16 @@
       overflow: hidden;
     }
 
+    .vision-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 10px solid #4a9490;
+      object-fit: cover;
+      object-position: center;
+    }
+
     /* curvy diagonal split for section 2 — SVG positioned inside */
     .split-svg {
       position: absolute;
@@ -296,8 +343,11 @@
       background: rgba(100, 190, 186, 0.04);
       border-radius: 13px;
       opacity: 0;
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.12);
       transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-                  transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                  transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                  background 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       flex-direction: column;
       pointer-events: none;
@@ -306,8 +356,63 @@
     .feature-card.active {
       opacity: 1;
       transform: translateY(-50%);
+      background:
+        radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.035) 34%, rgba(255, 255, 255, 0) 68%),
+        linear-gradient(145deg, rgba(114, 196, 191, 0.88), rgba(60, 110, 107, 0.76));
+      border-color: rgba(190, 246, 242, 0.58);
+      box-shadow:
+        0 18px 44px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.32),
+        inset 0 -32px 70px rgba(22, 74, 72, 0.18);
+      z-index: 3;
       pointer-events: auto;
       cursor: pointer;
+    }
+
+    .feature-card.active .feature-card-index {
+      color: rgba(223, 255, 250, 0.78);
+    }
+
+    .feature-card.active h3 {
+      color: rgba(246, 255, 253, 0.98);
+      text-shadow: 0 2px 14px rgba(8, 50, 48, 0.28);
+    }
+
+    .feature-card.active h3::after {
+      background: rgba(223, 255, 250, 0.46);
+    }
+
+    .feature-card.active p {
+      color: rgba(238, 255, 252, 0.86);
+    }
+
+    .feature-card.active .feature-card-nav {
+      color: rgba(226, 255, 250, 0.72);
+    }
+
+    .feature-card.stack-1,
+    .feature-card.stack-2 {
+      background: transparent;
+      border-color: rgba(190, 246, 242, 0.32);
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    .feature-card.stack-1 {
+      opacity: 0.62;
+      transform: translate(22px, calc(-50% - 18px)) scale(0.965);
+      z-index: 2;
+    }
+
+    .feature-card.stack-2 {
+      opacity: 0.38;
+      transform: translate(42px, calc(-50% - 36px)) scale(0.93);
+      z-index: 1;
+    }
+
+    .feature-card.stack-1 > *,
+    .feature-card.stack-2 > * {
+      opacity: 0;
     }
 
     .feature-card-index {
@@ -387,6 +492,8 @@
       <p class="hero-subtitle">Environmental Scanner</p>
     </div>
 
+    <a class="hero-scan-button" href="#features">Start Scanning</a>
+
     <!-- ROTATING EARTH (Spline web component) -->
     <!-- ⚠ If this is blank: in Spline → Export → Web → copy the prod URL
          and replace the url attribute below with: https://prod.spline.design/YOUR_ID/scene.splinecode -->
@@ -441,23 +548,26 @@
     <svg class="split-svg" preserveAspectRatio="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
       <defs>
 
-        <!-- Teal right/lower portion -->
-        <linearGradient id="tealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%"   stop-color="#2a524f"/>
-          <stop offset="60%"  stop-color="#336461"/>
+        <!-- Teal right/lower portion: starts in the hero shadow, then opens into turquoise -->
+        <linearGradient id="tealGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#0c1918"/>
+          <stop offset="24%"  stop-color="#10211f"/>
+          <stop offset="46%"  stop-color="#244b48"/>
+          <stop offset="72%"  stop-color="#336461"/>
           <stop offset="100%" stop-color="#3C6E6B"/>
         </linearGradient>
 
-        <!-- Dark shape base: ambient light from upper-right, deepens toward lower-left -->
-        <linearGradient id="darkBase" x1="100%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   stop-color="#2a4442"/>  <!-- upper-right edge: lit -->
-          <stop offset="40%"  stop-color="#1a3230"/>  <!-- mid: base tone -->
-          <stop offset="100%" stop-color="#0c1918"/>  <!-- lower-left corner: deepest -->
+        <!-- Dark shape base: blends down from the hero shadow, then returns to the section shade -->
+        <linearGradient id="darkBase" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#0c1918"/>
+          <stop offset="34%"  stop-color="#0c1918"/>
+          <stop offset="68%"  stop-color="#1a3230"/>
+          <stop offset="100%" stop-color="#0c1918"/>
         </linearGradient>
 
-        <!-- Subtle top-left ambient glow (as if the teal background reflects light back) -->
+        <!-- Subtle top-left ambient glow (muted so the page transition stays seamless) -->
         <radialGradient id="ambientGlow" cx="10%" cy="10%" r="65%">
-          <stop offset="0%"   stop-color="#2e5250" stop-opacity="0.5"/>
+          <stop offset="0%"   stop-color="#2e5250" stop-opacity="0"/>
           <stop offset="100%" stop-color="#0c1918" stop-opacity="0"/>
         </radialGradient>
 
@@ -470,7 +580,7 @@
 
         <!-- Highlight strip along the TOP of the dark shape (top edge catch) -->
         <linearGradient id="topEdgeLight" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"  stop-color="rgba(120,190,180,0.10)"/>
+          <stop offset="0%"  stop-color="rgba(120,190,180,0)"/>
           <stop offset="8%"  stop-color="rgba(120,190,180,0)"/>
         </linearGradient>
 
@@ -524,7 +634,9 @@
   </section>
 
   <!-- ─────────── SECTION 3 ─────────── -->
-  <section class="section-blank" id="vision" style="background: linear-gradient(160deg, #4a9490 0%, #5db0ab 55%, #72c4bf 100%);"></section>
+  <section class="section-blank" id="vision" style="background: linear-gradient(160deg, #4a9490 0%, #5db0ab 55%, #72c4bf 100%);">
+    <img class="vision-image" src="../isle_image.webp" alt="Island landscape">
+  </section>
 
 
   <script>
@@ -597,16 +709,30 @@
       const sect  = document.getElementById('features');
       const cards = Array.from(document.querySelectorAll('.feature-card'));
       let cur = 0;
+      let autoTimer = null;
 
       function show(idx) {
-        cards.forEach((c, i) => c.classList.toggle('active', i === idx));
+        cards.forEach((c, i) => {
+          const offset = (i - idx + cards.length) % cards.length;
+          c.classList.toggle('active', offset === 0);
+          c.classList.toggle('stack-1', offset === 1);
+          c.classList.toggle('stack-2', offset === 2);
+        });
         cur = idx;
+      }
+
+      function startAutoAdvance() {
+        if (autoTimer) clearInterval(autoTimer);
+        autoTimer = setInterval(() => {
+          show((cur + 1) % cards.length);
+        }, 4000);
       }
 
       cards.forEach((card) => {
         card.addEventListener('click', () => {
           if (!card.classList.contains('active')) return;
           show((cur + 1) % cards.length);
+          startAutoAdvance();
         });
       });
 
@@ -615,6 +741,7 @@
       }, { threshold: 0.6 }).observe(sect);
 
       show(0);
+      startAutoAdvance();
     })();
 
     /* ── PARALLAX TREES ─────────────────────────────────────────
